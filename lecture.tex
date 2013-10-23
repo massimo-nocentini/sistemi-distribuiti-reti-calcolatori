@@ -1,0 +1,228 @@
+\documentclass{article}
+\usepackage{sdrc}
+\lecture{1}
+
+\def\title{Massimo Nocentini}
+
+\begin{document}
+
+\maketitle
+
+\section{Analisi della complessit\`a dell'algoritmo \emph{MIS}}
+Sia $(\Omega, \mathcal{A}, \mathbf{P})$ uno spazio di probabilit\`a.
+Nel seguito assumeremo di lavorare su un grafo $G = (V, E)$ dove, come
+di consueto, $V$ rappresenta l'insieme dei vertici ed $E$ rappresenta 
+l'insieme degli archi.
+
+\begin{defn}{Evento con alta probabilit\`a}
+Un evento $E \in \mathcal{A}$ si dice che si verifica \emph{
+con alta probabilit\`a} se 
+\begin{displaymath}
+    \mathbf{P}(E) \geq 1 - {{1} \over {n^\alpha}} 
+    %\quad n, \alpha > 0
+\end{displaymath}
+dove $n = |V|$ e $\alpha > 0$.
+\end{defn}
+
+Possiamo vedere l'esecuzione dell'algoritmo come una successione di fasi
+$\lbrace t_i \rbrace_{i \in \N}$, ognuna con durata $\epsilon = 
+{{1} \over {4\e^{4}}}$
+
+% dare la definizione di superfase.
+Quello che vogliamo far vedere \`e che alla fine di ogni super-fase il 
+numero di nodi da considerare nella super-fase successiva viene 
+dimezzato con alta probabilit\`a. Prima di dare una scrittura formale di questo 
+teorema introduciamo i seguenti oggetti:
+\begin{itemize}
+    \item $U_t = \lbrace u \in V : u \text{ non ha deciso all'inizio della
+        fase } t \rbrace$;
+    \item $G_t = (U_t, E_t)$ \`e il grafo indotto dall'insieme di nodi $U_t$;
+    \item $M_i(t) = \lbrace u \in U_t : \delta_{G_t}(u) \geq 
+        \frac{n}{2^i} \rbrace$, dove $\delta_{G_t}(u)$ rappresenta il grado
+        del nodo $u$ nel grafo $G_t$.
+\end{itemize}
+
+\begin{lemma}
+    \label{lemma:epsilon-i}
+    Sia $t_i$ una fase dell'algoritmo e $\mathcal{E}_i \in \mathcal{A}$ 
+    tale che $\mathcal{E}_i = \lbrace M_i(t_i) = \emptyset\rbrace$. \\
+    Allora $\mathcal{E}_i$ si verifica con alta probabilit\`a.
+\end{lemma}
+
+
+    L'idea della prova \`e quella di trovare una stima della probabilit\`a 
+    del verificarsi dell'evento $\mathcal{E}_{i+1}$ assumendo che l'evento 
+    $\mathcal{E}_{i}$ si sia verificato: per far questo faremo vedere che
+    un eventuale vertice $v \in M_{i+1}(t_{i+1})$ esiste con bassa
+    probabilit\`a e, se questo \`e il caso, il vertice $v$ ``sparisce''
+    tra le fasi $t_i, t_{i+1}$ con alta probabilit\`a.
+
+\begin{proof}
+    Seguendo l'idea precedente studiamo il primo evento $\mathcal{E}_0$. Questo 
+    \`e il caso della prima fase dove nessun nodo $u \in V$ ha un grado 
+    $\delta_G(u) \geq n$: il caso che pu\`o dar fastidio \`e per
+    $\delta_G(u) = n$ ma lo scartiamo in quanto non ammettiamo self loop. 
+    Quindi $M_0(t_0) = \emptyset$ che equivale a dire
+    che l'evento $\mathcal{E}_0$ si \`e verificato, ovvero 
+    \begin{displaymath}
+        \mathbf{P} (\mathcal{E}_0) = 1 \geq 1 - \frac{1}{n^\alpha} \quad
+        \forall \alpha > 0
+    \end{displaymath}    
+     come richiesto.
+
+    Studiamo adesso per un generico evento $\mathcal{E}_{i+1}$ assumendo il
+    verificarsi dell'evento $\mathcal{E}_{i}$ e facciamo vedere che
+    \begin{displaymath}
+        \mathbf{P}(\mathcal{E}_{i+1} | \mathcal{E}_{i}) \geq 1 - \frac{1}{n^2}
+    \end{displaymath}
+    quindi scegliendo $\alpha = 2$ avremo che l'evento 
+    $\mathcal{E}_{i+1} | \mathcal{E}_{i}$ si verifica con alta probabilit\`a.
+
+    Supponiamo esista un vertice $v$ tale che $v \in M_{i+1}(t_{i+1})$. Per
+    la definizione di $M_{i+1}(t_{i+1})$ allora $\delta_{G_{t_{i+1}}}(v) 
+    \geq \frac{n}{2^{i+1}}$. Osserviamo adesso che durante l'avanzamento delle
+    fasi il grado di $v$ non pu\`o aumentare in quanto ad ogni fase si 
+    rimuovono vertici e non ne vengono aggiunti, quindi $\forall t: 
+    t < t_{i+1} \impliessymbol \delta_{G_{t}}(v) \geq \frac{n}{2^{i+1}}$.
+
+    Per ipotesi $\mathcal{E}_i$ si \`e verificato, quindi $\forall t: 
+    t \geq t_i \impliessymbol \delta_{G_{t}}(w) < \frac{n}{2^i}$.
+    Dato che questo vale per ogni vertice $w \in V_t$ allora vale anche 
+    per il vertice di grado massimo, di conseguenza 
+    $\Delta(G_{t}) < \frac{n}{2^i}$. Manipolando otteniamo
+    $\frac{\Delta(G_{t})}{2} < \frac{n}{2^{i+1}}$ e per transitivit\`a 
+    \begin{displaymath}
+        \delta_{G_t}(v) \geq \frac{\Delta(G_{t})}{2} \quad \text{dove } 
+        t \in [t_i,t_{i+1}]
+    \end{displaymath}
+
+    Per la condizione vista nella lezione precedente, vale 
+    $\forall t \in [t_i,t_{i+1}]: \mathbf{P}(v \not \in IS) \geq \epsilon$. 
+    L'evento $v \not \in IS$ significa che $v$ non appartiene all'insieme
+    indipendente e quindi significa che ha deciso, di conseguenza 
+    $v \not \in M_{i+1}(t_{i+1})$ \`e un evento equivalente. Possiamo
+    riscrivere ed usare il complemento, indicando con $k$ la lunghezza
+    di una generica fase:
+    \begin{displaymath}
+    \begin{array} {lcl} 
+        \mathbf{P}(v \not \in M_{i+1}(t_{i+1})) & \geq & \epsilon \\
+        \mathbf{P}(v \in M_{i+1}(t_i + j)) & < & 1-\epsilon \quad 
+            \text{dove } j\in[1,k]
+    \end{array}
+    \end{displaymath}
+    Osserviamo che la probabilit\`a dell'evento ``$v$ soppravvive a tutti
+    gli istanti nell'intervallo $[1,k]$'' \`e maggiorata da:
+    \begin{displaymath}
+        \mathbf{P}(v \in M_{i+1}(t_{i+1})) \leq (1 - \epsilon)^k 
+            \quad \text{dove } k = \frac{\log{n}^3}{\epsilon}
+    \end{displaymath}
+    Usando il limite notevole $\lim_{x \rightarrow \infty}{(1 + 
+    \frac{a}{x})^{bx}} = e^{ab}$ (nel nostro contesto $\epsilon \rightarrow 0
+    , a = -1, b = \log{n^3}$)
+    segue :
+    \begin{displaymath}
+        \mathbf{P}(v \in M_{i+1}(t_{i+1})) \leq (1 - \epsilon)^
+        \frac{\log{n}^3}{\epsilon} = e^{-\log{n}^3} = \frac{1}{n^3}
+    \end{displaymath}
+    Osserviamo adesso che la maggiorazione precedente riguarda \emph{un}
+    generico vertice $v$, studiando il caso peggiore nel quale tutti i 
+    nodi sono sopravvissuti si ottiene:
+    \begin{displaymath}
+        \mathbf{P}(\Exi{v} \in M_{i+1}(t_{i+1})) \leq 
+        \sum_{v \in V_{t_{i+1}}}{\mathbf{P}(v \in M_{i+1}(t_{i+1}))} \leq
+        \sum_{v \in V_{t_{i+1}}}{\frac{1}{n^3}} \leq
+        \frac{1}{n^2}
+    \end{displaymath}
+    Per complemento, la probabilit\`a dell'evento $\mathcal{E}_{i+1}|
+    \mathcal{E}_i$ \`e almeno $1 - \frac{1}{n^2}$ come richiesto.
+\end{proof}
+
+Studiamo adesso la terminazione dell'algoritmo stimando il tempo necessario
+affinch\`e tutti i nodi abbiano deciso.
+
+\begin{theorem}
+    Dopo $O(\log{n})$ fasi tutti i nodi hanno deciso con alta probabilit\`a.
+\end{theorem}
+
+\begin{proof}
+    Definiamo i seguenti oggetti che verranno utilizzati nella prova:
+    \begin{itemize}
+        \item $l = \ceil{\log{n}}$;
+        \item $\mathcal{E} = \bigcap_{i \in 
+            \lbrace 0, \ldots, l \rbrace}{\mathcal{E}_i}$. Osserviamo che 
+            %$\mathcal{E} \in \mathcal{A}$
+            , essendo $\mathcal{A}$  chiusa 
+            rispetto sia all'unione che all'intersezione, $\mathcal{E}$ 
+            \`e un evento in quanto intersezione di eventi $\mathcal{E}_i 
+            \in \mathcal{A}$;
+        \item $\mathcal{P} \in \mathcal{A}$ tale che $\mathcal{P} = 
+            \lbrace \text{al tempo $t_l$ tutti i nodi hanno deciso} \rbrace$.
+    \end{itemize}
+
+    L'obiettivo della prova \`e quello di far vedere che l'evento 
+    $\mathcal{P}$ si verifica con alta probabilit\`a e successivamente
+    che \`e necessario $O(\log{n})$ tempo per la terminazione. 
+
+    Osserviamo che $\mathcal{E}\subseteq\mathcal{P}$ (in parole $\mathcal{E}$ 
+    implica $\mathcal{P}$) in quanto l'intersezione tra due eventi 
+    $\mathcal{E}_i \cap \mathcal{E}_{i+1} \subseteq \mathcal{E}_{i+1}$,
+    e quindi iterando per l'intera intersezione si ha $\mathcal{E} 
+    \subseteq \mathcal{E}_l$. Ma se si verifica $\mathcal{E}_l$ allora
+    $M_l(t_l) = \emptyset$, ovvero tutti i nodi hanno deciso entro la fase
+    $t_l$, che \`e la definizione dell'evento $\mathcal{P}$.
+
+    Ragioniamo per 
+    complemento e studiamo l'evento $\overline{\mathcal{E}}$: per le 
+    leggi di De Morgan vale $\overline{\mathcal{E}} = (\overline{\mathcal{E}}_1
+    \cap \mathcal{E}_0) \cup (\overline{\mathcal{E}}_2
+    \cap \mathcal{E}_1 \cap \mathcal{E}_0) \cup \ldots \cup 
+    (\overline{\mathcal{E}}_l \cap \mathcal{E}_{l-1} \cap \ldots
+    \cap \mathcal{E}_0)$. Per lo stesso ragionamento fatto sull'intersezione di
+    eventi $\mathcal{E}_i$ possiamo scrivere $\overline{\mathcal{E}} \subseteq
+    (\overline{\mathcal{E}}_1
+    \cap \mathcal{E}_0) \cup (\overline{\mathcal{E}}_2
+    \cap \mathcal{E}_1 ) \cup \ldots \cup 
+    (\overline{\mathcal{E}}_l \cap \mathcal{E}_{l-1})$. Applichiamo adesso 
+    la monotonia di $\mathbf{P}$: $\mathbf{P}(\overline{\mathcal{E}}) \leq
+    \mathbf{P}(\overline{\mathcal{E}}_1
+    \cap \mathcal{E}_0) + \mathbf{P}(\overline{\mathcal{E}}_2
+    \cap \mathcal{E}_1 ) + \ldots + 
+    \mathbf{P}(\overline{\mathcal{E}}_l \cap \mathcal{E}_{l-1})$. Per la 
+    definizione di evento condizionato, se $A,B$ sono eventi allora $
+    \mathbf{P}(A|B) = \frac{\mathbf{P}(A\cap B)}{\mathbf{P}(B)}$, quindi vale 
+    la maggiorazione ${\mathbf{P}(A\cap B)} \leq 
+    \frac{\mathbf{P}(A\cap B)}{\mathbf{P}(B)}$ in quanto $\mathbf{P}(B) \leq 1$
+    , allora: 
+    $\mathbf{P}(\overline{\mathcal{E}}) \leq
+    \mathbf{P}(\overline{\mathcal{E}}_1
+    \cap \mathcal{E}_0) + \mathbf{P}(\overline{\mathcal{E}}_2
+    \cap \mathcal{E}_1 ) + \ldots + 
+    \mathbf{P}(\overline{\mathcal{E}}_l \cap \mathcal{E}_{l-1}) \leq
+    \mathbf{P}(\overline{\mathcal{E}}_1
+    | \mathcal{E}_0) + \mathbf{P}(\overline{\mathcal{E}}_2
+    | \mathcal{E}_1 ) + \ldots + 
+    \mathbf{P}(\overline{\mathcal{E}}_l | \mathcal{E}_{l-1})$. Per il 
+    lemma precedente vale $\mathbf{P}(\mathcal{E}_{k+1}|
+    \mathcal{E}_{k}) < \frac{1}{n^2}$, quindi possiamo maggiorare ancora:
+    $\mathbf{P}(\overline{\mathcal{E}}_1
+    | \mathcal{E}_0) + \mathbf{P}(\overline{\mathcal{E}}_2
+    | \mathcal{E}_1 ) + \ldots + 
+    \mathbf{P}(\overline{\mathcal{E}}_l | \mathcal{E}_{l-1}) \leq 
+    \frac{1}{n^2} + \ldots + \frac{1}{n^2} \leq \frac{l}{n^2} \leq 
+    \frac{\log{n} + 1}{n^2} \leq \frac{1}{n}$. Per complemento abbiamo 
+    $\mathbf{P}(\mathcal{E}) \geq 1 - \frac{1}{n}$ quindi, scegliendo $\alpha
+    = 1$, l'evento $\mathcal{E}$ si verifica con alta probabilit\`a. Ma
+    dato che $\mathcal{E} \impliessymbol \mathcal{P}$, anche l'evento $
+    \mathcal{P}$ si verifica con alta probabilit\`a. Pertanto dopo $\log{n}$
+    fasi, i nodi hanno deciso, ogni fase ha durata $\frac{3\log{n}}{\epsilon}$
+    ed il tempo totale necessario alla terminazione \`e $O(\log{n}^2) = 
+    O(\log{n})$ come richiesto.
+\end{proof}
+
+%\begin{figure}
+%\fig{0.9}{esempio}
+%\caption{Esempio di figura}
+%\label{Figura:Esempio di figura}
+%\end{figure}
+
+\end{document} 
