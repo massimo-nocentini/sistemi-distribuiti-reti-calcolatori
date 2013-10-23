@@ -1,0 +1,40 @@
+graph G {
+
+    a1 [color="blue"];
+    a2 [color="blue", style="dashed"];
+    a3 [color="blue", style="dashed"];
+    
+    b1 [color="green", style="dashed"];
+    b2 [color="green"];
+    b3 [color="green", style="dashed"];
+
+    c1 [color="red", style="dashed"];
+    c2 [color="red", style="dashed"];
+    c3 [color="red"];
+    c4 [color="red", style="dashed"];
+
+    d1 [color="brown"];
+    d2 [color="brown", style="dashed"];
+
+    a3--a2;
+    a1--a2 [style="dashed"];
+    a1--a3 [style="dashed"];
+    b3--b2 [style="dashed"];
+    b1--b2 [style="dashed"];
+    b1--b3;     
+    c3--c2 [style="dashed"];
+    c1--c2;
+    c1--c3 [style="dashed"];
+    c1--c4;
+    c4--c2;
+    c4--c3 [style="dashed"];
+    d1--d2 [style="dashed"];
+    a2--b2 [style="dotted"];
+    a1--b1 [style="dotted"];
+    a1--c1 [style="dotted"];
+    b1--c1 [style="dotted"];
+    b2--c2 [style="dotted"];
+    d1--c1 [style="dotted"];
+    d2--c2 [style="dotted"];
+
+}

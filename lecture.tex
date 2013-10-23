@@ -247,11 +247,52 @@ vertice sia a conoscenza dei propri vicini.
  \caption{Un secondo algoritmo randomizzato per la costruzione di un MIS}
 \end{algorithm}
 
+Quello che si pu\`o dimostrare \`e che ad ogni fase il numero medio di archi
+si dimezza: per farlo \`e necessario non contare due volte un arco che
+viene cancellato a causa di due messaggi diversi. Questa situazione si
+verifica nella seguente configurazione che rappresenta uno spezzone della
+computazione precedente:
+\begin{itemize}
+    \item $(x,y),(y,z),(z,w) \in E$;
+    \item $r_x < r_y \wedge r_w < r_z$.
+\end{itemize}
+In questo caso i nodi $x,w$ inviano un messaggio di cancellazione ai nodi $
+y,z$ rispettivamente e quindi $y,z$ si ``avvisano'' a vicenda di non
+considerarsi vertici vicini nella prossima fase, usando due volte l'arco
+$(y,z)$.
 
-%\begin{figure}
-%\fig{0.9}{esempio}
-%\caption{Esempio di figura}
-%\label{Figura:Esempio di figura}
-%\end{figure}
+\section{Applicazioni}
+
+\subsection{Matching Problem}
+\`E possibile risolvere il problema del matching usando l'algoritmo
+randomizzato per MIS. Dato un grafo $G = (V,E)$ di cui vogliamo trovare 
+un matching massimale possiamo costruire un grafo $G'$ che ha per vertici
+gli archi di $G$ e per archi coppie $(e_i, e_j)$ tali che $e_i, e_j \in E
+\wedge e_i \cap e_j \not = \emptyset$. In parole, nel nuovo grafo si collegano
+due archi se questi sono adiacenti nel grafo originale.
+
+Possiamo applicare l'algoritmo per trovare un insieme indipendente nel nuovo
+grafo $G'$ che equivale a trovare un insieme di archi che non sono adiacenti nel
+grafo originale, ovvero abbiamo risolto il problema del matching come richiesto.
+
+\subsection{Vertex Coloring}
+
+\begin{figure}
+\fig{0.9}{MIS-coloring-reduction}
+\caption{Esempio di figura}
+\label{Figura:Esempio di figura}
+\end{figure}
+
+\begin{figure}
+\fig{0.9}{MIS-coloring-reduction-with-colors}
+\caption{Esempio di figura}
+\label{Figura:Esempio di figura}
+\end{figure}
+
+\begin{figure}
+\fig{0.9}{final-MIS-coloing-reduction}
+\caption{Esempio di figura}
+\label{Figura:Esempio di figura}
+\end{figure}
 
 \end{document} 
