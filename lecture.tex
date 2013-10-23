@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{sdrc}
+\usepackage[ruled,vlined]{algorithm2e}
 \lecture{1}
 
 \def\title{Massimo Nocentini}
@@ -218,6 +219,34 @@ affinch\`e tutti i nodi abbiano deciso.
     ed il tempo totale necessario alla terminazione \`e $O(\log{n}^2) = 
     O(\log{n})$ come richiesto.
 \end{proof}
+
+\section{Un secondo algoritmo}
+Vediamo un secondo algoritmo che permette di costruire un MIS, anche questo
+usa un approccio randomizzato. Questa nuovo implementazione assume che ogni
+vertice sia a conoscenza dei propri vicini.
+\begin{algorithm}
+ \SetAlgoLined
+ \KwData{Un grafo non orientato $G = (V, E)$}
+ \KwResult{insieme di vertici $V' \subseteq V$ tale che $V'$ \`e un MIS}
+    \For{$v \in V$}{
+        $v$ sceglie $r_v \in (0,1)$\;
+        $W_v \leftarrow \emptyset$\;
+        \For{$w \in N(v)$}{
+            $v$ riceve $r_w$ e aggiunge $r_w$ a $W_v$
+        }
+        \If{$r_v \leq \min_{r_w \in W_v}\lbrace r_w \rbrace$}{
+            $v$ comunica ad ogni $w \in N(v)$ di cancellarsi dal grafo
+        }
+        \If{$v$ riceve un messaggio di cancellarsi dal grafo da $w \in N(v)$}{
+            $v$ comunica ad ogni $s \in N(v)\setminus\lbrace w\rbrace$ 
+            di non considerarlo come vicino nella fase successiva
+        }
+    }
+    il grafo iniziale pu\`o dividersi in sottografi, potenzialmente
+    non connessi, quindi si invoca ricorsivamente su ognuno di essi
+ \caption{Un secondo algoritmo randomizzato per la costruzione di un MIS}
+\end{algorithm}
+
 
 %\begin{figure}
 %\fig{0.9}{esempio}
