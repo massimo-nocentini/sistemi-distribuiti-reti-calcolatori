@@ -15,7 +15,7 @@ andremo ad analizzare la versione randomizzata dell'algoritmo, daremo la
 dimostrazione della complessit\`a per il tempo necessario alla terminazione, 
 accenneremo una variante anch'essa randomizzata ed infine studieremo due applicazioni.
 
-\section{Analisi della complessit\`a dell'algoritmo \emph{MIS}}
+\section{Analisi dell'algoritmo MIS probabilistico}
 Nel seguito si calcolano delle probabilit\`a ma si \`e omesso la
 specifica dello spazio $(\Omega, \mathcal{A}, \mathbf{P})$ 
 usato. Pertanto si assume che sia possibile definire tale spazio; per i
@@ -33,14 +33,11 @@ con alta probabilit\`a} se
 dove $n \in \N$ e $\alpha > 0$.
 \end{defn}
 
-Possiamo vedere l'esecuzione dell'algoritmo come una successione di fasi
-$\lbrace t_i \rbrace_{i \in \N}$, ognuna con durata 
 
-% dare la definizione di superfase.
-Quello che vogliamo far vedere \`e che alla fine di ogni super-fase il 
-numero di vertici da considerare nella super-fase successiva viene 
-dimezzato con alta probabilit\`a. Prima di dare una scrittura formale di questo 
-teorema introduciamo i seguenti oggetti:
+Quello che vogliamo far vedere \`e che al termine di ogni fase, il 
+numero di vertici da considerare nella fase successiva viene 
+dimezzato con alta probabilit\`a. Prima di dare una scrittura formale di 
+questa idea introduciamo i seguenti oggetti:
 \begin{itemize}
     \item $U_t = \lbrace u \in V : u \text{ non ha deciso all'inizio della
         fase } t \rbrace$;
@@ -57,16 +54,16 @@ teorema introduciamo i seguenti oggetti:
     Allora $\mathcal{E}_i$ si verifica con alta probabilit\`a.
 \end{lemma}
 
-
     L'idea della prova \`e quella di trovare una stima della probabilit\`a 
     del verificarsi dell'evento $\mathcal{E}_{i+1}$ assumendo che l'evento 
-    $\mathcal{E}_{i}$ si sia verificato: per far questo faremo vedere che
-    un eventuale vertice $v \in M_{i+1}(t_{i+1})$ esiste con bassa
-    probabilit\`a e, se questo \`e il caso, il vertice $v$ ``sparisce''
-    tra le fasi $t_i, t_{i+1}$ con alta probabilit\`a.
+    $\mathcal{E}_{i}$ si sia verificato: se esiste un vertice 
+    $v \in M_{i+1}(t_{i+1})$ allora $v$ esiste con bassa
+    probabilit\`a.
 
 \begin{proof}
-    Seguendo l'idea precedente studiamo il primo evento $\mathcal{E}_0$. Questo 
+Seguendo l'idea precedente procediamo per induzione su $i$:
+\begin{itemize}
+    \item $i = 0$, studiamo il primo evento $\mathcal{E}_0$. Questo 
     \`e il caso della prima fase dove nessun vertice $u \in V$ ha un grado 
     $\delta_G(u) \geq n$: il caso che pu\`o dar fastidio \`e per
     $\delta_G(u) = n$ ma lo scartiamo in quanto non ammettiamo self loop. 
@@ -76,9 +73,11 @@ teorema introduciamo i seguenti oggetti:
         \mathbf{P} (\mathcal{E}_0) = 1 \geq 1 - \frac{1}{n^\alpha} \quad
         \forall \alpha > 0
     \end{displaymath}    
-     come richiesto.
+     come richiesto;
 
-    Studiamo adesso per un generico evento $\mathcal{E}_{i+1}$ assumendo il
+    \item supponiamo il lemma vero per $i$ e dimostriamo per $i+1$;
+
+    \item consideriamo un generico evento $\mathcal{E}_{i+1}$ assumendo il
     verificarsi dell'evento $\mathcal{E}_{i}$ e facciamo vedere che
     \begin{displaymath}
         \mathbf{P}(\mathcal{E}_{i+1} | \mathcal{E}_{i}) \geq 1 - \frac{1}{n^2}
@@ -148,14 +147,15 @@ teorema introduciamo i seguenti oggetti:
     \end{displaymath}
     Per complemento, la probabilit\`a dell'evento $\mathcal{E}_{i+1}|
     \mathcal{E}_i$ \`e almeno $1 - \frac{1}{n^2}$ come richiesto.
+\end{itemize}
 \end{proof}
 
 Studiamo adesso la terminazione dell'algoritmo stimando il tempo necessario
 affinch\`e tutti i vertici abbiano deciso.
 
 \begin{theorem}
-    Dopo $O(\log{n})$ fasi, l'evento ``tutti i vertici hanno deciso
-     con alta probabilit\`a.
+    Dopo $O(\log{n})$ fasi, l'evento ``tutti i vertici hanno deciso''
+    si verifica con alta probabilit\`a.
 \end{theorem}
 
 \begin{proof}
@@ -237,7 +237,7 @@ affinch\`e tutti i vertici abbiano deciso.
 
 \section{Un secondo algoritmo}
 Vediamo un secondo algoritmo che permette di costruire un MIS, anche questo
-usa un approccio randomizzato. Questa nuovo implementazione assume che ogni
+usa un approccio randomizzato. Questa nuova implementazione assume che ogni
 vertice sia a conoscenza dei propri vicini.
 \begin{algorithm}
  \SetAlgoLined
@@ -286,12 +286,14 @@ gli archi di $G$ e per archi coppie $(e_i, e_j)$ tali che $e_i, e_j \in E
 \wedge e_i \cap e_j \not = \emptyset$. In parole, nel nuovo grafo si collegano
 due archi se questi sono adiacenti nel grafo originale.
 
-Possiamo applicare l'algoritmo per trovare un insieme indipendente nel nuovo
-grafo $G'$ che equivale a trovare un insieme di archi che non sono adiacenti nel
+Applicando l'algoritmo probabilistico per trovare un insieme indipendente 
+nel nuovo grafo $G'$, equivale a trovare un insieme di archi che non sono 
+adiacenti nel
 grafo originale, risolvendo il problema del matching come richiesto.
 
 \subsection{Vertex Coloring}
-Possiamo usare l'algoritmo randomizzato per il calcolo del MIS per risolvere
+Una seconda applicazione dell'algoritmo randomizzato per il calcolo 
+del MIS \`e quella per risolvere
 il problema della colorazione dei vertici, il primo dei problemi che 
 abbiamo affrontato durante il corso. 
 
@@ -308,8 +310,8 @@ connessioni del grafo originale, ad esempio: se $(v,w) \in E$ e si
 sono create le copie $v_k,w_k$ di $v,w$ rispettivamente, 
 allora $(v_k,w_k) \in E_1$. 
 Una volta costruito il grafo $G_1$ possiamo eseguire l'algoritmo per
-il calcolo del MIS: se una copia con numerazione $i$ di un vertice $v$
-appartiene al MIS, allora a $v$ si attribuisce il colore $i$.
+il calcolo del MIS: se una copia $v_i$, con numerazione $i$ di un vertice $v$,
+appartiene al MIS allora a $v$ si attribuisce il colore $i$.
 
 Studiando le regole precedenti possiamo osservare:
 \begin{itemize}
@@ -335,7 +337,7 @@ alla colorazione finale, serve solo per mettere in evidenza le copie
 relative ai vertici iniziali).
 
 \begin{figure}
-\fig{0.5}{MIS-coloring-reduction}
+\fig{0.4}{MIS-coloring-reduction}
 \caption{Grafo da colorare e generazione delle copie con connessioni}
 \label{figura:original-graph-and-reduce-ready-graph}
 \end{figure}
@@ -344,9 +346,9 @@ In Figura \ref{figura:MIS-coloring} riportiamo a sinistra un MIS
 rappresentato dai vertici con bordo continuo e a destra la colorazione 
 del grafo originale in base alla numerazione delle copie che appartengono
 al MIS: notare che i vertici $a,d$ hanno lo stesso colore in quanto le copie
-$a1, d1$ appartengono al MIS.
+$a_1, d_1$ appartengono al MIS.
 \begin{figure}
-\fig{0.5}{MIS-coloring-reduction-with-colors}
+\fig{0.4}{MIS-coloring-reduction-with-colors}
 \caption{Calcolo del MIS e colorazione finale}
 \label{figura:MIS-coloring}
 \end{figure}
