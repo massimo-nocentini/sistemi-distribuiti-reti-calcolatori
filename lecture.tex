@@ -9,25 +9,32 @@
 
 \maketitle
 
+Queste note sono il continuo delle precedenti riguardanti il calcolo di
+un insieme indipendente massimale di vertici in un grafo. In particolare
+andremo ad analizzare la versione randomizzata dell'algoritmo, daremo la 
+dimostrazione della complessit\`a per il tempo necessario alla terminazione, 
+accenneremo una variante anch'essa randomizzata ed infine studieremo due applicazioni.
+
 \section{Analisi della complessit\`a dell'algoritmo \emph{MIS}}
-Sia $(\Omega, \mathcal{A}, \mathbf{P})$ uno spazio di probabilit\`a.
-Nel seguito assumeremo di lavorare su un grafo $G = (V, E)$ dove, come
-di consueto, $V$ rappresenta l'insieme dei vertici ed $E$ rappresenta 
-l'insieme degli archi.
+Nel seguito si calcolano delle probabilit\`a ma si \`e omesso la
+specifica dello spazio $(\Omega, \mathcal{A}, \mathbf{P})$ 
+usato. Pertanto si assume che sia possibile definire tale spazio; per i
+nostri scopi \`e utile richiamare che $\Omega$ \`e l'insieme degli 
+eventi elementari, $\mathcal{A}\subseteq 2^{\Omega}$ 
+\`e una $\sigma$-algebra e $\mathbf{P}: \mathcal{A} \rightarrow [0,1]$.
 
 \begin{defn}{Evento con alta probabilit\`a}
-Un evento $E \in \mathcal{A}$ si dice che si verifica \emph{
+Un evento $\mathcal{E} \in \mathcal{A}$ si dice che si verifica \emph{
 con alta probabilit\`a} se 
 \begin{displaymath}
-    \mathbf{P}(E) \geq 1 - {{1} \over {n^\alpha}} 
+    \mathbf{P}(\mathcal{E}) \geq 1 - {{1} \over {n^\alpha}} 
     %\quad n, \alpha > 0
 \end{displaymath}
-dove $n = |V|$ e $\alpha > 0$.
+dove $n \in \N$ e $\alpha > 0$.
 \end{defn}
 
 Possiamo vedere l'esecuzione dell'algoritmo come una successione di fasi
-$\lbrace t_i \rbrace_{i \in \N}$, ognuna con durata $\epsilon = 
-{{1} \over {4\e^{4}}}$
+$\lbrace t_i \rbrace_{i \in \N}$, ognuna con durata 
 
 % dare la definizione di superfase.
 Quello che vogliamo far vedere \`e che alla fine di ogni super-fase il 
@@ -91,17 +98,22 @@ teorema introduciamo i seguenti oggetti:
     Dato che questo vale per ogni vertice $w \in V_t$ allora vale anche 
     per il vertice di grado massimo, di conseguenza 
     $\Delta(G_{t}) < \frac{n}{2^i}$. Manipolando otteniamo
-    $\frac{\Delta(G_{t})}{2} < \frac{n}{2^{i+1}}$ e per transitivit\`a 
+    $\frac{\Delta(G_{t})}{2} < \frac{n}{2^{i+1}}$ e per transitivit\`a :
     \begin{displaymath}
         \delta_{G_t}(v) \geq \frac{\Delta(G_{t})}{2} \quad \text{dove } 
         t \in [t_i,t_{i+1}]
     \end{displaymath}
 
-    Per la condizione vista nella lezione precedente, vale 
-    $\forall t \in [t_i,t_{i+1}]: \mathbf{P}(v \not \in IS) \geq \epsilon$. 
+    Nella lezione precedente abbiamo dimostrato che
+    un vertice non viene aggiunto ad un MIS con almeno una probabilit\`a 
+    costante se il suo grado \`e ``alto'', essendo precisi possiamo scrivere 
+    $\forall t \in [t_i,t_{i+1}]: \mathbf{P}(v \not \in IS) \geq \epsilon$
+    con $\epsilon ={{1} \over {4\e^{4}}}$.
     L'evento $v \not \in IS$ significa che $v$ non appartiene all'insieme
-    indipendente e quindi significa che ha deciso, di conseguenza 
-    $v \not \in M_{i+1}(t_{i+1})$ \`e un evento equivalente. Possiamo
+    indipendente e, se questo \`e il caso, $v \not \in M_{i+1}(t_{i+1})$ 
+    \`e un evento equivalente (in quanto $v$ ha deciso 
+    di non appartenere a $IS$, mentre $M_{i+1}(t_{i+1})$ contiene solo
+    vertici che ancora non hanno deciso). Possiamo
     riscrivere ed usare il complemento, indicando con $k$ la lunghezza
     di una generica fase:
     \begin{displaymath}
@@ -125,7 +137,7 @@ teorema introduciamo i seguenti oggetti:
         \mathbf{P}(v \in M_{i+1}(t_{i+1})) \leq (1 - \epsilon)^
         \frac{\log{n}^3}{\epsilon} = e^{-\log{n}^3} = \frac{1}{n^3}
     \end{displaymath}
-    Osserviamo adesso che la maggiorazione precedente riguarda \emph{un}
+    La maggiorazione precedente riguarda \emph{un}
     generico vertice $v$, studiando il caso peggiore nel quale tutti i 
     vertici sono sopravvissuti si ottiene:
     \begin{displaymath}
@@ -142,7 +154,8 @@ Studiamo adesso la terminazione dell'algoritmo stimando il tempo necessario
 affinch\`e tutti i vertici abbiano deciso.
 
 \begin{theorem}
-    Dopo $O(\log{n})$ fasi tutti i vertici hanno deciso con alta probabilit\`a.
+    Dopo $O(\log{n})$ fasi, l'evento ``tutti i vertici hanno deciso
+     con alta probabilit\`a.
 \end{theorem}
 
 \begin{proof}
@@ -173,13 +186,15 @@ affinch\`e tutti i vertici abbiano deciso.
     $t_l$, che \`e la definizione dell'evento $\mathcal{P}$.
 
     Ragioniamo per 
-    complemento e studiamo l'evento $\overline{\mathcal{E}}$: per le 
-    leggi di De Morgan vale $\overline{\mathcal{E}} = (\overline{\mathcal{E}}_1
+    complemento e studiamo l'evento $\overline{\mathcal{E}}$: usando 
+    le intersezioni di eventi $\mathcal{E}_i$ come partizioni
+    vale $\overline{\mathcal{E}} = (\overline{\mathcal{E}}_1
     \cap \mathcal{E}_0) \cup (\overline{\mathcal{E}}_2
     \cap \mathcal{E}_1 \cap \mathcal{E}_0) \cup \ldots \cup 
     (\overline{\mathcal{E}}_l \cap \mathcal{E}_{l-1} \cap \ldots
-    \cap \mathcal{E}_0)$. Per lo stesso ragionamento fatto sull'intersezione di
-    eventi $\mathcal{E}_i$ possiamo scrivere $\overline{\mathcal{E}} \subseteq
+    \cap \mathcal{E}_0)$. Abbiamo osservato che $\mathcal{E}_i \cap 
+    \mathcal{E}_{i+1} \subseteq \mathcal{E}_{i+1}$, allora possiamo scrivere 
+    $\overline{\mathcal{E}} \subseteq
     (\overline{\mathcal{E}}_1
     \cap \mathcal{E}_0) \cup (\overline{\mathcal{E}}_2
     \cap \mathcal{E}_1 ) \cup \ldots \cup 
@@ -190,7 +205,7 @@ affinch\`e tutti i vertici abbiano deciso.
     \cap \mathcal{E}_1 ) + \ldots + 
     \mathbf{P}(\overline{\mathcal{E}}_l \cap \mathcal{E}_{l-1})$. Per la 
     definizione di evento condizionato, se $A,B$ sono eventi allora $
-    \mathbf{P}(A|B) = \frac{\mathbf{P}(A\cap B)}{\mathbf{P}(B)}$, quindi vale 
+    \mathbf{P}(A|B) = \frac{\mathbf{P}(A\cap B)}{\mathbf{P}(B)}$, vale 
     la maggiorazione ${\mathbf{P}(A\cap B)} \leq 
     \frac{\mathbf{P}(A\cap B)}{\mathbf{P}(B)}$ in quanto $\mathbf{P}(B) \leq 1$
     , allora: 
@@ -204,16 +219,16 @@ affinch\`e tutti i vertici abbiano deciso.
     | \mathcal{E}_1 ) + \ldots + 
     \mathbf{P}(\overline{\mathcal{E}}_l | \mathcal{E}_{l-1})$. Per il 
     lemma precedente vale $\mathbf{P}(\mathcal{E}_{k+1}|
-    \mathcal{E}_{k}) < \frac{1}{n^2}$, quindi possiamo maggiorare ancora:
+    \mathcal{E}_{k}) < \frac{1}{n^2}$, possiamo maggiorare ancora:
     $\mathbf{P}(\overline{\mathcal{E}}_1
     | \mathcal{E}_0) + \mathbf{P}(\overline{\mathcal{E}}_2
     | \mathcal{E}_1 ) + \ldots + 
     \mathbf{P}(\overline{\mathcal{E}}_l | \mathcal{E}_{l-1}) \leq 
     \frac{1}{n^2} + \ldots + \frac{1}{n^2} \leq \frac{l}{n^2} \leq 
     \frac{\log{n} + 1}{n^2} \leq \frac{1}{n}$. Per complemento abbiamo 
-    $\mathbf{P}(\mathcal{E}) \geq 1 - \frac{1}{n}$ quindi, scegliendo $\alpha
+    $\mathbf{P}(\mathcal{E}) \geq 1 - \frac{1}{n}$ , scegliendo $\alpha
     = 1$, l'evento $\mathcal{E}$ si verifica con alta probabilit\`a. Ma
-    dato che $\mathcal{E} \impliessymbol \mathcal{P}$, anche l'evento $
+    dato che $\mathcal{E}$ implica $\mathcal{P}$, anche l'evento $
     \mathcal{P}$ si verifica con alta probabilit\`a. Pertanto dopo $\log{n}$
     fasi, i vertici hanno deciso, ogni fase ha durata $\frac{3\log{n}}{\epsilon}$
     ed il tempo totale necessario alla terminazione \`e $O(\log{n}^2) = 
