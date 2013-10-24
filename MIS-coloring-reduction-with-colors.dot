@@ -37,4 +37,15 @@ graph G {
     d1--c1 [style="dotted"];
     d2--c2 [style="dotted"];
 
+    a [color="green"];
+    b [color="red"];
+    c [color="blue"];
+    d [color="green"];
+
+    a--b;
+    a--c;
+    b--c;
+    c--d;
+
+     
 }

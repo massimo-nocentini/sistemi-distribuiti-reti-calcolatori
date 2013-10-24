@@ -31,16 +31,16 @@ $\lbrace t_i \rbrace_{i \in \N}$, ognuna con durata $\epsilon =
 
 % dare la definizione di superfase.
 Quello che vogliamo far vedere \`e che alla fine di ogni super-fase il 
-numero di nodi da considerare nella super-fase successiva viene 
+numero di vertici da considerare nella super-fase successiva viene 
 dimezzato con alta probabilit\`a. Prima di dare una scrittura formale di questo 
 teorema introduciamo i seguenti oggetti:
 \begin{itemize}
     \item $U_t = \lbrace u \in V : u \text{ non ha deciso all'inizio della
         fase } t \rbrace$;
-    \item $G_t = (U_t, E_t)$ \`e il grafo indotto dall'insieme di nodi $U_t$;
+    \item $G_t = (U_t, E_t)$ \`e il grafo indotto dall'insieme di vertici $U_t$;
     \item $M_i(t) = \lbrace u \in U_t : \delta_{G_t}(u) \geq 
         \frac{n}{2^i} \rbrace$, dove $\delta_{G_t}(u)$ rappresenta il grado
-        del nodo $u$ nel grafo $G_t$.
+        del vertice $u$ nel grafo $G_t$.
 \end{itemize}
 
 \begin{lemma}
@@ -60,7 +60,7 @@ teorema introduciamo i seguenti oggetti:
 
 \begin{proof}
     Seguendo l'idea precedente studiamo il primo evento $\mathcal{E}_0$. Questo 
-    \`e il caso della prima fase dove nessun nodo $u \in V$ ha un grado 
+    \`e il caso della prima fase dove nessun vertice $u \in V$ ha un grado 
     $\delta_G(u) \geq n$: il caso che pu\`o dar fastidio \`e per
     $\delta_G(u) = n$ ma lo scartiamo in quanto non ammettiamo self loop. 
     Quindi $M_0(t_0) = \emptyset$ che equivale a dire
@@ -127,7 +127,7 @@ teorema introduciamo i seguenti oggetti:
     \end{displaymath}
     Osserviamo adesso che la maggiorazione precedente riguarda \emph{un}
     generico vertice $v$, studiando il caso peggiore nel quale tutti i 
-    nodi sono sopravvissuti si ottiene:
+    vertici sono sopravvissuti si ottiene:
     \begin{displaymath}
         \mathbf{P}(\Exi{v} \in M_{i+1}(t_{i+1})) \leq 
         \sum_{v \in V_{t_{i+1}}}{\mathbf{P}(v \in M_{i+1}(t_{i+1}))} \leq
@@ -139,10 +139,10 @@ teorema introduciamo i seguenti oggetti:
 \end{proof}
 
 Studiamo adesso la terminazione dell'algoritmo stimando il tempo necessario
-affinch\`e tutti i nodi abbiano deciso.
+affinch\`e tutti i vertici abbiano deciso.
 
 \begin{theorem}
-    Dopo $O(\log{n})$ fasi tutti i nodi hanno deciso con alta probabilit\`a.
+    Dopo $O(\log{n})$ fasi tutti i vertici hanno deciso con alta probabilit\`a.
 \end{theorem}
 
 \begin{proof}
@@ -157,7 +157,7 @@ affinch\`e tutti i nodi abbiano deciso.
             \`e un evento in quanto intersezione di eventi $\mathcal{E}_i 
             \in \mathcal{A}$;
         \item $\mathcal{P} \in \mathcal{A}$ tale che $\mathcal{P} = 
-            \lbrace \text{al tempo $t_l$ tutti i nodi hanno deciso} \rbrace$.
+            \lbrace \text{al tempo $t_l$ tutti i vertici hanno deciso} \rbrace$.
     \end{itemize}
 
     L'obiettivo della prova \`e quello di far vedere che l'evento 
@@ -169,7 +169,7 @@ affinch\`e tutti i nodi abbiano deciso.
     $\mathcal{E}_i \cap \mathcal{E}_{i+1} \subseteq \mathcal{E}_{i+1}$,
     e quindi iterando per l'intera intersezione si ha $\mathcal{E} 
     \subseteq \mathcal{E}_l$. Ma se si verifica $\mathcal{E}_l$ allora
-    $M_l(t_l) = \emptyset$, ovvero tutti i nodi hanno deciso entro la fase
+    $M_l(t_l) = \emptyset$, ovvero tutti i vertici hanno deciso entro la fase
     $t_l$, che \`e la definizione dell'evento $\mathcal{P}$.
 
     Ragioniamo per 
@@ -215,7 +215,7 @@ affinch\`e tutti i nodi abbiano deciso.
     = 1$, l'evento $\mathcal{E}$ si verifica con alta probabilit\`a. Ma
     dato che $\mathcal{E} \impliessymbol \mathcal{P}$, anche l'evento $
     \mathcal{P}$ si verifica con alta probabilit\`a. Pertanto dopo $\log{n}$
-    fasi, i nodi hanno deciso, ogni fase ha durata $\frac{3\log{n}}{\epsilon}$
+    fasi, i vertici hanno deciso, ogni fase ha durata $\frac{3\log{n}}{\epsilon}$
     ed il tempo totale necessario alla terminazione \`e $O(\log{n}^2) = 
     O(\log{n})$ come richiesto.
 \end{proof}
@@ -256,7 +256,7 @@ computazione precedente:
     \item $(x,y),(y,z),(z,w) \in E$;
     \item $r_x < r_y \wedge r_w < r_z$.
 \end{itemize}
-In questo caso i nodi $x,w$ inviano un messaggio di cancellazione ai nodi $
+In questo caso i vertici $x,w$ inviano un messaggio di cancellazione ai vertici $
 y,z$ rispettivamente e quindi $y,z$ si ``avvisano'' a vicenda di non
 considerarsi vertici vicini nella prossima fase, usando due volte l'arco
 $(y,z)$.
@@ -273,26 +273,67 @@ due archi se questi sono adiacenti nel grafo originale.
 
 Possiamo applicare l'algoritmo per trovare un insieme indipendente nel nuovo
 grafo $G'$ che equivale a trovare un insieme di archi che non sono adiacenti nel
-grafo originale, ovvero abbiamo risolto il problema del matching come richiesto.
+grafo originale, risolvendo il problema del matching come richiesto.
 
 \subsection{Vertex Coloring}
+Possiamo usare l'algoritmo randomizzato per il calcolo del MIS per risolvere
+il problema della colorazione dei vertici, il primo dei problemi che 
+abbiamo affrontato durante il corso. 
+
+Dato un grafo $G = (V, E)$ di cui
+vogliamo colorare i vertici, possiamo costruire un nuovo grafo 
+$G_1 = (V_1, E_1)$
+il cui insieme di vertici contiene, per ogni vertice $v$ del grafo
+originale, $\delta(v) + 1$ copie numerate. 
+Le copie relative allo stesso 
+vertice $v$ si collegano in modo da formare una clique e
+copie aventi la stessa numerazione, ma relative a vertici diversi, si
+collegano seguendo le
+connessioni del grafo originale, ad esempio: se $(v,w) \in E$ e si 
+sono create le copie $v_k,w_k$ di $v,w$ rispettivamente, 
+allora $(v_k,w_k) \in E_1$. 
+Una volta costruito il grafo $G_1$ possiamo eseguire l'algoritmo per
+il calcolo del MIS: se una copia con numerazione $i$ di un vertice $v$
+appartiene al MIS, allora a $v$ si attribuisce il colore $i$.
+
+Studiando le regole precedenti possiamo osservare:
+\begin{itemize}
+    \item   le copie relative ad uno stesso vertice $v$ sono collegate
+            in una clique, quindi se una di queste sar\`a inclusa nel MIS
+            di conseguenza impedisce alle altre di esserlo. Questo
+            permette di non assegnare allo stesso vertice pi\`u di 
+            un colore;
+    \item   collegando copie con stessa numerazione $v_i, w_i$ 
+            relative a vertici distinti $v,w$ adiacenti,
+            permette di attribuire colori diversi a $v,w$, 
+            in quanto se $v_i$ verr\`a inclusa in un MIS,
+            $w_i$ non vi apparterr\`a e quindi il colore di $v$ sar\`a 
+            diverso dal colore di $w$, condizione necessaria per una 
+            colorazione.
+\end{itemize}
+
+In Figura 
+\ref{figura:original-graph-and-reduce-ready-graph} riportiamo a sinistra
+il grafo di cui vogliamo ottenere una colorazione e a destra il grafo
+costruito usando le regole precedenti (il colore dei vertici non corrisponde
+alla colorazione finale, serve solo per mettere in evidenza le copie
+relative ai vertici iniziali).
 
 \begin{figure}
-\fig{0.9}{MIS-coloring-reduction}
-\caption{Esempio di figura}
-\label{Figura:Esempio di figura}
+\fig{0.5}{MIS-coloring-reduction}
+\caption{Grafo da colorare e generazione delle copie con connessioni}
+\label{figura:original-graph-and-reduce-ready-graph}
 \end{figure}
 
+In Figura \ref{figura:MIS-coloring} riportiamo a sinistra un MIS
+rappresentato dai vertici con bordo continuo e a destra la colorazione 
+del grafo originale in base alla numerazione delle copie che appartengono
+al MIS: notare che i vertici $a,d$ hanno lo stesso colore in quanto le copie
+$a1, d1$ appartengono al MIS.
 \begin{figure}
-\fig{0.9}{MIS-coloring-reduction-with-colors}
-\caption{Esempio di figura}
-\label{Figura:Esempio di figura}
-\end{figure}
-
-\begin{figure}
-\fig{0.9}{final-MIS-coloing-reduction}
-\caption{Esempio di figura}
-\label{Figura:Esempio di figura}
+\fig{0.5}{MIS-coloring-reduction-with-colors}
+\caption{Calcolo del MIS e colorazione finale}
+\label{figura:MIS-coloring}
 \end{figure}
 
 \end{document} 
