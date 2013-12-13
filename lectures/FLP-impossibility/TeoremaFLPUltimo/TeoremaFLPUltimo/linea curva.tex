@@ -1,0 +1,53 @@
+%\documentclass{article}
+\documentclass[crop]{beamer}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usetikzlibrary{arrows}
+\usepackage{verbatim}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{snakes}
+
+\tikzset{snake it/.style={decorate, decoration=snake}}
+\begin{document}
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+\tikzset{mynode2/.style={circle,fill=white,minimum size=15pt,inner sep=0pt,},}
+\tikzset{mynode/.style={circle,minimum size=15pt,inner sep=0pt,draw, top color=white ,bottom color=cyan!20, cyan,text=blue},}
+\tikzset{EdgeStyle/.append style = {bend left}}
+ \begin{figure}
+ \vspace{10pt}
+ \centering                           
+\begin{tikzpicture}[scale=2]
+%nodi reali
+  \draw
+    (0,0) node[mynode] (c) {$C$}
+    (2,-1) node[mynode] (c1) {$C_1$}
+    (2,1) node[mynode] (c2) {$C_2$}
+    (4,0) node[mynode] (c3) {$C'$}
+  %nodi etichette  
+ 	(0.8,0.8) node[mynode2] (a) {$\sigma_2$}
+  	(0.8,-0.8) node[mynode2] (b) {$\sigma_1$}
+  	(3.2,0.8) node[mynode2] (d) {$\sigma_1$}
+  	(3.2,-0.8) node[mynode2] (e) {$\sigma_2$}
+    
+  ;
+    %archi ondulati
+    
+   \draw [->,snake=snake] (c) -- (c1);
+   \draw [->,snake=snake] (c) -- (c2);
+   \draw [->,snake=snake] (c1) -- (c3);
+   \draw [->,snake=snake] (c2) -- (c3);
+    
+    
+    ; 
+    
+    
+    
+
+
+\end{tikzpicture}
+\end{figure} 
+
+
+\end{document}

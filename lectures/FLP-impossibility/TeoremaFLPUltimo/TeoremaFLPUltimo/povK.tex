@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage[top=1in,bottom=1in,right=1in,left=1in]{geometry}
+
+\begin{document} 
+\tikzset{mynode/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=blue!20, blue,text=black},}
+\tikzset{mynode2/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=red!20, red,text=black},}
+\tikzset{mynode3/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=orange!20, orange,text=black},}
+\tikzset{mynode4/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=violet!20, violet,text=black},}
+\tikzset{mynode5/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=cyan!20, cyan,text=black},}
+\tikzset{mynode6/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=green!20, green,text=black},}
+\tikzset{mynode7/.style={circle,fill=gray,minimum size=20pt,inner sep=0pt,},draw}
+\begin{figure}
+\centering
+\begin{tikzpicture}
+ %nodes
+  \draw (-1,0) node[mynode](k) {$k$};
+  \draw (0,2) node[mynode2] (alfa){$\alpha$};  
+  \draw (2.3,3) node[mynode3](beta) {$\beta$};
+  \draw (4.6, 2) node[mynode4](gamma) {$\gamma$}; 
+  \draw (5.6,0) node[mynode7] {};
+  \draw (0,-2) node[mynode7] {};  
+  \draw (2.3,-3) node[mynode6] (j){$j$};
+  \draw (4.6, -2) node[mynode5](r) {$r$}; 
+ 
+ %edges for j
+   \draw[->,green,dashed] (alfa) -- (j);
+    \draw[->,green,dashed] (beta) -- (j);
+    \draw[->,green,dashed] (gamma) -- (j);
+     \draw[->,green,dashed] (r) -- (j); 
+     
+ %edges for alpha
+    \draw[->,red] (k) -- (alfa);
+    \draw[->,red] (beta) -- (alfa);
+    \draw[->,red] (j) to[bend left] (alfa);
+    \draw[->,red] (r) -- (alfa); 
+    
+    %edges for beta
+    \draw[->,orange] (k) -- (beta);
+    \draw[->,orange] (alfa) to[bend left](beta);
+    \draw[->,orange] (gamma) -- (beta);
+    \draw[->,orange] (r) -- (beta);   
+    
+     %edges for gamma
+    \draw[->,violet] (k) -- (gamma);
+    \draw[->,violet] (beta) to[bend left](gamma);
+    %\draw[->,violet] (j) to [loop right] (gamma);
+    \draw[->,violet] (r) -- (gamma);
+     \tikzset{mystyle/.style={->,relative=false,in=0,out=0}}
+    \draw [->,violet] (j) to [bend left=15 ] (gamma);
+    
+    %edges for r
+   % \draw[->,cyan] (alfa) to[bend left] (r);
+   % \draw[->,cyan] (beta) to[bend left](r);
+    \tikzset{mystyle/.style={->,relative=false,in=0,out=0}}
+    \draw [->,cyan] (beta) to [bend right=15 ] (r);    
+    \draw[->,cyan] (j) to[bend right] (r);
+    %\draw[->,cyan] (gamma) to[bend left](r); 
+    \tikzset{mystyle/.style={->,relative=false,in=0,out=0}}
+    \draw [->,cyan] (gamma) to [bend left=20 ] (r);      
+    \tikzset{mystyle/.style={->,relative=false,in=0,out=0}}
+    \draw [->,cyan] (alfa) to [bend right=15 ] (r);
+    
+    %edges for k
+    
+     %edges for beta
+    \tikzset{mystyle/.style={->,relative=false,in=0,out=0}}
+    \draw [->,blue] (beta) to [bend right=80] (k);
+    \draw[->,blue] (alfa) to[bend right](k);
+    \tikzset{mystyle/.style={->,relative=false,in=0,out=0}}
+    \draw [->,blue] (gamma) to [bend right=15] (k);
+    \draw[->,blue] (r) -- (k);         
+   
+    
+  \end{tikzpicture}
+  \caption{Punto di vista di j}
+  \end{figure}
+  \end{document}

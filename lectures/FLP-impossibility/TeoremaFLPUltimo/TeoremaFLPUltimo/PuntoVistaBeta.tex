@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage{tikz}
+
+\usepackage{tikz}
+\begin{document}
+
+
+\tikzset{mynode/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=blue!20, blue,text=black},}
+\tikzset{mynode2/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=magenta!20, magenta,text=black},}
+\tikzset{mynode3/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=orange!20, orange,text=black},}
+\tikzset{mynode6/.style={circle,minimum size=20pt,inner sep=0pt,draw, top color=white ,bottom color=green!20, green,text=black},}
+\tikzset{mynode7/.style={circle,fill=gray,minimum size=20pt,inner sep=0pt,},draw}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  \newdimen\R
+  \R=4cm
+  \draw (0:\R)
+     \foreach \x in {72,144,...,360} { (\x:\R) }
+              -- cycle (360:\R) node[mynode](gamma) {$\gamma$}
+              -- cycle (288:\R)node[mynode6] (delta){$\delta$}
+              -- cycle (216:\R) node[mynode7] {}
+              -- cycle (144:\R) node[mynode2] (alfa){$\alpha$}
+              -- cycle  (72:\R) node[mynode3](beta) {$\beta$};
+             
+    
+    %edges for beta
+    \draw[->,black] (alfa) --(beta);
+    \draw[->,black] (gamma)--(beta);
+    
+  
+    
+     
+\end{tikzpicture}
+\caption{Punto di vista di $\beta$}
+\end{figure}
+\end{document}
