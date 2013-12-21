@@ -1,0 +1,38 @@
+\begin{tikzpicture}
+
+
+\tikzset{label/.style={minimum size=15pt,inner sep=0pt,},}
+\tikzset{conf/.style={circle,minimum size=15pt,inner sep=0pt,draw, top color=white ,bottom color=cyan!20, cyan,text=blue},}
+
+\tikzset{camminoUp/.style={->, line width=1pt, snake=coil, segment amplitude=1pt, segment aspect=0, segment length=4mm}}
+\tikzset{camminoDown/.style={->, line width=1pt, snake=coil, mirror snake, segment amplitude=1pt, segment aspect=0, segment length=4mm}}
+	\draw
+		(0,0) node[conf] (d1) {}(0,-.5)node[label](){$dv=0$}
+		(2,0) node[conf] (d2) {}(2,-.5)node[label](){$dv=0$}
+		(5,0) node[conf] (d3) {}(5,-.5)node[label](){$dv=1$}
+		(7,0) node[conf] (d4) {}(7,-.5)node[label](){$dv=1$}
+		
+		(0,2) node[conf] (c1) {$C_\alpha$}
+		(2,2) node[conf] (c2) {$C_\beta$}
+		(5,2) node[conf] (c3) {$C_\gamma$}
+		(7,2) node[conf] (c4) {$C_\delta$}
+
+		(3.5,5) node[conf] (c) {$C$}
+;
+
+\draw[camminoUp](c) -- (c1);
+\draw[camminoUp](c) -- (c2);
+\draw[camminoUp](c) -- (c3);
+\draw[camminoUp](c) -- (c4);
+\draw[camminoUp](c1) -- (d1);
+\draw[camminoUp](c2) -- (d2);
+\draw[camminoUp](c3) -- (d3);
+\draw[camminoUp](c4) -- (d4);
+
+\draw[->,line width=1pt](c1) to [bend left=15]  (c2);
+\draw[->,line width=1pt](c3) to [bend left=15]  (c4);
+\draw[->,line width=1pt,gray!50](c1) to [bend left=30]  (c3);
+
+
+
+\end{tikzpicture}

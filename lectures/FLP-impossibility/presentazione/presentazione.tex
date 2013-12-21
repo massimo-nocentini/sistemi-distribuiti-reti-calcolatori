@@ -1,0 +1,532 @@
+\documentclass{beamer}
+\usepackage[italian]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{eurosym}
+\usepackage{tikz}
+\usetheme{Berlin}
+%\usetheme{PaloAlto}
+
+\usecolortheme{dolphin}
+\usetikzlibrary{snakes}
+
+\begin{document}
+
+
+\title[$\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad$Pierucci, Nocentini, Bruni]{\Huge\textbf{Teorema FLP}}
+\subtitle{\scriptsize Impossibilità del consenso distribuito in presenza di un processore guasto}
+\author[Teorema FLP - Impossibilità del consenso distribuito in presenza di un processore guasto]{Chiara Pierucci, Massimo Nocentini, Valentino Bruni}
+\date{18 dicembre 2013}
+\frame{\titlepage}
+
+\begin{frame}{Indice}\tableofcontents\end{frame}
+
+
+\section{Introduzione}
+\begin{frame}\begin{block}{}\centering\LARGE Introduzione\end{block}\vspace{0.5cm}\end{frame}
+
+
+\begin{frame}\frametitle{Consenso}
+Processori collaborano per raggiungere una decisione comune 
+\begin{itemize}
+\item no decisione banale \begin{itemize}\item valore concordato con scambio di messaggi\end{itemize}
+\item no decisione esterna \begin{itemize}\item valore proposto dai processori\end{itemize}
+\end{itemize}
+\vspace*{.5cm}
+Ambiente asincrono uniforme
+\\\vspace*{.5cm}
+Possibilità di guasti di tipo ``stop''
+\end{frame}
+
+
+\begin{frame}\frametitle{Impossibilità del consenso}
+\begin{block}{Teorema FLP (Fischer, Lynch, Paterson, 1985)}Non esistono protocolli di consenso totalmente corretti, nonostante la presenza di un guasto.\end{block}
+\end{frame}
+
+\begin{frame}\frametitle{Scambio di messaggi}
+Schema asincrono
+\begin{itemize}
+\item\emph{consegna}: se un messaggio $m$ è stato inviato ad un processore
+  $p$, prima o poi $p$ riceverà $m$
+\item\emph{ritardo}: un processore $p$ non può fare assunzioni su quando riceverà i messaggi a lui destinati
+\item\emph{ordine}: i messaggi destinati ad un processore $p$ possono non
+  essere consegnati nell'ordine in cui sono stati inviati
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}\frametitle{Formalizzazione}
+Protocollo di consenso
+\begin{itemize}
+\item sistema asincrono composto da $n\geq 2$ processori
+\item stato del processore $p$
+\begin{itemize}
+\item memoria interna infinita
+\item registro di input binario $x_p$
+\item registro di output $y_p$ con valori in $\{0,1,b\}$
+\begin{itemize}\item stato di decisione se $y_p\in\{0,1\}$\end{itemize}
+\end{itemize}
+\end{itemize}
+
+Messaggio
+\begin{itemize}
+\item coppia $(p,m)$, dove $p$ destinatario e $m$ contenuto
+\item evento $e=(p,m)$ quando $p$ riceve la coppia $(p,m)$
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}\frametitle{Message buffer}
+Struttura dati astratta
+\begin{itemize}
+\item contenente messaggi inviati ma non ancora ricevuti
+\item che supporta operazioni di 
+\begin{itemize}
+\item\texttt{send$(p,m)$}: il messaggio $m$ è inserito nel buffer ed è pronto per essere recapitato al processore $p$
+\item\texttt{receive$(p)$}: viene recapitato a $p$
+\begin{itemize}
+\item un messaggio $(p,m)$ presente nel buffer
+\item oppure il messaggio speciale $\perp$
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}\frametitle{Grafo di esecuzione}
+\begin{figure}\centering \input{img/grafo.tex}\end{figure}\vspace*{.25cm}
+Grafo $G=(V,E)$ dove
+\begin{itemize}
+\item $V$ insieme di configurazioni
+\item $E$ insieme di step
+\end{itemize}
+\vspace*{.25cm}
+Cammino nel grafo
+\begin{itemize}
+\item run $\sigma$, sequenza finita o infinita di eventi
+\end{itemize}
+\vspace*{.25cm}
+$G$ rappresenta tutte le possibili esecuzioni del protocollo
+\end{frame}
+
+\begin{frame}\frametitle{Configurazione}
+Una configurazione è una tupla $C=\left<MB, (p_1,\ldots,p_n)\right>$\\\vspace*{.5cm}
+Configurazione iniziale
+\begin{itemize}
+\item $MB=\emptyset$
+\item $y_{p_i}=b$, $\forall i\in\{1,\ldots,n\}$
+\end{itemize}
+\vspace*{.25cm}
+Configurazione di decisione
+\begin{itemize}
+\item $\exists i\in\{1,\ldots,n\}$: $y_{p_i}\in\{0,1\}$
+\end{itemize}
+\begin{figure}\centering\input{img/parzialmenteCorretto.tex}\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Run}
+Run ammissibile
+\begin{itemize}
+\item ogni configurazione $C$ contiene al più un processore guasto
+\item tutti i messaggi sono stati recapitati
+\end{itemize}
+\vspace*{0.25cm}
+Run decisionale
+\begin{itemize}
+\item esiste una configurazione di decisione.
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Protocollo di consenso}
+\begin{block}{Protocollo parzialmente corretto}
+\begin{itemize}
+\item nessuna configurazione raggiungibile ha più di un valore di decisione
+\item esiste una configurazione raggiungibile con valore di decisione 0 e una con valore di decisione 1.
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{Protocollo totalmente corretto}
+\begin{itemize}
+\item parzialmente corretto
+\item ogni run ammissibile è decisionale
+\end{itemize}
+\end{block}
+\end{frame}
+
+\section{Risultato di impossibilità}
+\begin{frame}{}\begin{block}{}\centering\LARGE Risultato di impossibilità\end{block}\vspace{0.5cm}\end{frame}
+
+
+\begin{frame}\frametitle{Teorema FLP}
+\begin{block}{Teorema FLP - Non esistono protocolli di consenso totalmente corretti, nonostante la presenza di un guasto}
+Supponiamo per assurdo che esista un protocollo totalmente corretto a meno di un guasto, dimostriamo che
+\begin{enumerate}
+\item esiste una configurazione iniziale bivalente
+\item esistono configurazioni 0-valenti e 1-valenti 
+\item esiste una configurazione bivalente non iniziale
+\item esiste un run ammissibile ma non decisionale
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}\frametitle{1 - Esiste una configurazione iniziale bivalente}
+$$C_\alpha = (x_1,x_2,\ldots,x_{i-1},\fbox{0},x_{i+1},\ldots,x_n)\quad\mbox{0-valente}$$
+$$C_\beta = (x_1,x_2,\ldots,x_{i-1},\fbox{1},x_{i+1},\ldots,x_n)\quad\mbox{1-valente}$$
+\centering \scriptsize guasto$\quad\ $
+\begin{columns}[c]
+    \column{.5\textwidth}
+		\begin{figure}\centering\input{img/teo1a.tex}\end{figure}
+    \column{.5\textwidth}
+    		 \begin{center}\color{white}{$C_\beta$ bivalente}\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{1 - Esiste una configurazione iniziale bivalente}
+$$C_\alpha = (x_1,x_2,\ldots,x_{i-1},\fbox{0},x_{i+1},\ldots,x_n)\quad\mbox{0-valente}$$
+$$C_\beta = (x_1,x_2,\ldots,x_{i-1},\fbox{1},x_{i+1},\ldots,x_n)\quad\mbox{1-valente}$$
+\centering \scriptsize guasto$\quad\ $
+\begin{columns}[c]
+    \column{.5\textwidth}
+		\begin{figure}\centering\input{img/teo1b.tex}\end{figure}
+    \column{.5\textwidth}
+    		\begin{center}$C_\beta$ bivalente\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{2 - Esistono configurazioni 0-valenti e 1-valenti}
+\begin{center}\color{black}{$E_0$ configurazione con decisione 0}\end{center}
+\begin{figure}\centering\input{img/teo2a.tex}\end{figure}
+\begin{center}\color{black}{analogamente per $E_1$ con decisione 1}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{2 - Esistono configurazioni 0-valenti e 1-valenti}
+\begin{center}\color{black}{$E_0$ configurazione con decisione 0}\end{center}
+\begin{figure}\centering\input{img/teo2b.tex}\end{figure}
+\begin{center}\color{black}{analogamente per $E_1$ con decisione 1}\end{center}
+\end{frame}
+
+
+\begin{frame}\frametitle{3 - Esiste una configurazione bivalente non iniziale}
+\begin{center}\color{black}{Configurazioni vicine raggiungono configurazioni discordi}\end{center}
+\begin{figure}\centering\input{img/teo31.tex}\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{3 - Esiste una configurazione bivalente non iniziale}
+\begin{center}\color{black}{$e=(p,m)$ ed $e'=(p',m')$}\end{center}
+\begin{figure}\centering\input{img/teo3a.tex}\end{figure}
+\begin{center}\color{white}{assurdo se $p=p'$}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{3 - Esiste una configurazione bivalente non iniziale}
+\begin{center}\color{black}{$e=(p,m)$ ed $e'=(p',m')$}\end{center}
+\begin{figure}\centering\input{img/teo3b.tex}\end{figure}
+\begin{center}\color{black}{assurdo se $p\neq p'$}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{3 - Esiste una configurazione bivalente non iniziale}
+\begin{center}\color{black}{$e=(p,m)$ ed $e'=(p,m')$}\end{center}
+\begin{figure}\centering\input{img/teo3a.tex}\end{figure}
+\begin{center}\color{white}{assurdo se $p=p'$}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{3 - Esiste una configurazione bivalente non iniziale}
+\begin{center}\color{black}{$e=(p,m)$ ed $e'=(p,m')$}\end{center}
+\begin{figure}\centering\input{img/teo3c.tex}\end{figure}
+\begin{center}\color{white}{assurdo se $p=p'$}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{3 - Esiste una configurazione bivalente non iniziale}
+\begin{center}\color{black}{$e=(p,m)$ ed $e'=(p,m')$}\end{center}
+\begin{figure}\centering\input{img/teo3d.tex}\end{figure}
+\begin{center}\color{white}{assurdo se $p=p'$}\end{center}
+\end{frame}
+
+
+\begin{frame}\frametitle{3 - Esiste una configurazione bivalente non iniziale}
+\begin{center}\color{black}{$e=(p,m)$ ed $e'=(p,m')$}\end{center}
+\begin{figure}\centering\input{img/teo3e.tex}\end{figure}
+\begin{center}\color{black}{assurdo per $\sigma$ decisionale}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{4 - Esiste un run ammissibile ma non decisionale}
+\begin{figure}\centering\input{img/teo40.tex}\end{figure}
+\begin{center}\color{white}{$C_\beta$ bivalente}\end{center}
+\end{frame}
+
+
+\begin{frame}\frametitle{4 - Esiste un run ammissibile ma non decisionale}
+\begin{figure}\centering\input{img/teo4a.tex}\end{figure}
+\begin{center}\color{white}{$C_\beta$ bivalente}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{4 - Esiste un run ammissibile ma non decisionale}
+\begin{figure}\centering\input{img/teo4b.tex}\end{figure}
+\begin{center}\color{white}{$C_\beta$ bivalente}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{4 - Esiste un run ammissibile ma non decisionale}
+\begin{figure}\centering\input{img/teo4c.tex}\end{figure}
+\begin{center}\color{white}{$C_\beta$ bivalente}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{4 - Esiste un run ammissibile ma non decisionale}
+\begin{figure}\centering\input{img/teo4d.tex}\end{figure}
+\begin{center}\color{white}{$C_\beta$ bivalente}\end{center}
+\end{frame}
+
+\begin{frame}\frametitle{4 - Esiste un run ammissibile ma non decisionale}
+\begin{figure}\centering\input{img/teo4e.tex}\end{figure}
+\begin{center}\color{white}{$C_\beta$ bivalente}\end{center}
+\end{frame}
+
+
+\section{Consenso con processori inizialmente guasti}
+\begin{frame}{}\begin{block}{}\centering\LARGE Consenso con processori inizialmente guasti\end{block}\vspace{0.5cm}\end{frame}
+
+\begin{frame}\frametitle{Consenso con processori inizialmente guasti}
+Assunzioni
+\begin{itemize}
+\item sistema non uniforme con $n$ noto
+\item maggioranza dei processori non guasti $L\geq\left\lceil\dfrac{n+1}{2}\right\rceil$
+\item nessun guasto durante l'esecuzione
+\end{itemize}
+Obiettivo
+\begin{itemize}
+\item raggiungere il consenso tra i processori funzionanti
+\begin{itemize}
+\item informando i processori funzionanti di quali siano gli altri processori funzionanti
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}\frametitle{Protocollo di consenso con $L$ processori}
+Ogni processore $p$
+\begin{enumerate}
+	\item<1->costruisce $G$
+	\begin{enumerate}[i)]
+		\item<1-> effettua un broadcast della propria ID
+		\item<1-> attende di ricevere esattamente $L-1$ ID
+		\begin{itemize}
+			\item<1-> tali processori sono chiamati \texttt{ancestors($p$)}
+		\end{itemize}
+		\item<1-> costruisce il grafo $G=(V,E)$ dove
+		\begin{itemize}
+			\item<1-> $V$ contiene tutti gli $n$ processori
+			\item $(i,j)\in E$ se $j$ riceve un messaggio da $i$
+		\end{itemize}
+	\end{enumerate}
+
+	\item<2-> amplia $G$
+	\begin{enumerate}[i)]
+		\item<2-> effettua un broadcast di $x_p$ e delle ID degli \texttt{ancestors($p$)}
+		\item<2-> aggiorna $G$ con le informazioni ricevute dal broadcast
+	\end{enumerate}
+
+	\item<3-> costruisce $G^+$
+	\begin{enumerate}[i)]
+		\item<3-> chiude transitivamente $G$ ottenendo $G^+$
+	\end{enumerate}
+	
+	\item<4-> determina la clique iniziale
+	\begin{enumerate}[i)]
+		\item<4-> i nodi nella clique raggiungono il consenso
+	\end{enumerate}
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}\frametitle{Esempio con $n=5$ ed $L=3$}
+Costruzione di $G$
+\begin{figure}\centering\input{img/povIniziali.tex}\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Esempio con $n=5$ ed $L=3$}
+Ampliamento di $G$
+\begin{columns}[c]
+    \column{.5\textwidth}
+    		\begin{itemize}
+			\item[]\texttt{ancestors}$(\alpha)=\{\beta,\gamma\}$
+			\item[]\texttt{ancestors}$(\beta)=\{\alpha,\gamma\}$
+			\item[]\texttt{ancestors}$(\gamma)=\{\alpha,\beta\}$
+			\item[]\texttt{ancestors}$(\delta)=\{\alpha,\beta\}$
+    		\end{itemize}
+    \column{.5\textwidth}
+    		\begin{figure}\centering\input{img/ampliamento.tex}\end{figure}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}\frametitle{Esempio con $n=5$ ed $L=3$}
+Costruzione di $G^+$\vspace*{.5cm}
+\begin{columns}[c]
+    \column{.5\textwidth}
+    		Astrazione del grafo $G$
+    		\begin{figure}\centering\input{img/astrazione.tex}\end{figure}
+    \column{.5\textwidth}
+    		Chiusura transitiva di $G$
+    		\begin{figure}\centering\input{img/chiusura.tex}\end{figure}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}\frametitle{Esempio con $n=5$ ed $L=3$}
+Clique iniziale $IC$
+$$p\in IC \ \leftrightarrow\ \forall q: q\in\texttt{ancestors}(p)\rightarrow p\in\texttt{ancestors}(q)$$
+\begin{figure}\centering\input{img/clique.tex}\end{figure}
+\begin{center}I nodi $\alpha$, $\beta$ e $\gamma$ appartengono alla clique iniziale\end{center}
+\end{frame}
+
+
+\begin{frame}\frametitle{Proprietà della clique iniziale}
+\begin{itemize}
+\item Esistenza della clique iniziale
+	\begin{itemize}\item $G^+$ contiene almeno una clique iniziale\end{itemize}
+\item Estensione della clique iniziale
+	\begin{itemize}\item Ogni clique iniziale ha almeno $L$ processori\end{itemize}
+\item Unicità della clique iniziale
+	\begin{itemize}\item $G^+$ contiene non più di una clique iniziale\end{itemize}
+\item Conoscenza della stessa clique iniziale
+	\begin{itemize}\item Ogni processore $p$ costruisce la stessa clique iniziale.\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}\frametitle{$G^+$ contiene almeno una clique iniziale}
+Per assurdo $\forall p: p\not\in IC$
+\begin{itemize}
+\item sia $q \in \texttt{ancestors}(p)$
+\begin{itemize}
+\item $p \not \in \texttt{ancestors}(q)$
+\end{itemize}
+\item analogamente sia $r \in \texttt{ancestors}(q)$ 
+\begin{itemize}
+\item quindi $q \not  \in \texttt{ancestors}(r)$
+\end{itemize} 
+\item $\ldots$
+\end{itemize}
+\begin{figure}\centering\input{img/esistenza.tex}\end{figure}
+I processori sono in numero finito
+\begin{itemize}
+\item prima o poi si creerà un ciclo
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}\frametitle{Ogni clique iniziale ha almeno $L$ processori}
+Supponiamo $\forall q \in \texttt{ancestors}(c)\rightarrow q\in IC$
+\begin{itemize}
+\item $|IC|\leq L-1$
+\item $c$ ha ricevuto $L-1$ messaggi
+\begin{itemize}
+\item quindi $c\in\texttt{ancestors}(c)$
+\end{itemize}
+\item assurdo
+\begin{itemize}
+\item  nessun processore invia messaggi a se stesso
+\end{itemize}
+\end{itemize}
+\begin{figure}\centering\input{img/estensionea.tex}\end{figure}
+\end{frame}
+
+
+\begin{frame}\frametitle{Ogni clique iniziale ha almeno $L$ processori}
+Supponiamo $\exists q\in\texttt{ancestors}(c)$ tale che $q \not\in IC$,
+\begin{itemize}
+\item $\exists r\in\texttt{ancestors}(q)$ tale che $q\not\in\texttt{ancestors}(r)$
+\item per transitività di $G^+$
+\begin{itemize}
+\item $r \in \texttt{ancestors} (c)$
+\end{itemize}
+\item per ipotesi $c \in IC$
+\begin{itemize}
+\item $r \in\texttt{ancestors} (c) \rightarrow c \in \texttt{ancestors}(r)$
+\end{itemize}
+\item assurdo
+\begin{itemize}
+\item per transitività $q \in\texttt{ancestors}(r)$
+\end{itemize}
+\end{itemize}	
+\begin{figure}\centering\input{img/estensioneb.tex}\end{figure}
+\end{frame}
+
+
+\begin{frame}\frametitle{$G^+$ contiene non più di una clique iniziale}
+Supponiamo $IC_1$ e $IC_2$ clique iniziali
+\begin{itemize}
+\item entrambe hanno almeno $L>n/2$ processori
+\begin{itemize}
+\item esiste almeno un processore $p$ in comune
+\begin{itemize}
+\item $p$ è raggiungibile da tutti i processori di $IC_1$ e di $IC_2$
+\item tutti i processori delle due clique sono raggiungibili da $p$
+\end{itemize}
+\end{itemize}
+\item le due clique risultano fuse a formarne una unica
+\end{itemize}
+\begin{figure}\centering\input{img/unicita.tex}\end{figure}
+\end{frame}
+
+\begin{frame}\frametitle{Ogni processore $p$ costruisce la stessa clique iniziale}
+Supponiamo che $p$ e $q$ costruiscano $IC_p\neq IC_q$
+\begin{itemize}
+\item dal punto di vista di $q$
+\begin{itemize}
+\item $z\not\in IC_q$
+\item $\exists \gamma \in \texttt{ancestors}(z)$ tale che $z \not \in \texttt{ancestors}(\gamma)$
+\end{itemize}
+\item dal punto di vista di $p$
+\begin{itemize}
+\item $z\in IC_p$
+\item $z \in \texttt{ancestors}(\gamma)$
+\end{itemize}
+\end{itemize}
+\begin{itemize}
+\item se nella prima fase $\gamma\in\texttt{ancestors}(q)$ 
+\begin{itemize}
+\item $z \in\texttt{ancestors}(\gamma)$
+\end{itemize}
+\item altrimenti
+\begin{itemize}
+\item dal broadcast  $z\in\texttt{ancestors}(\gamma)$.
+\end{itemize}
+\end{itemize}
+\begin{figure}\centering\input{img/conoscenza.tex}\end{figure}
+\end{frame}
+
+
+\begin{frame}\frametitle{Correttezza}
+Il protocollo è corretto
+\begin{itemize}
+\item in $G^+$ esiste un'unica clique iniziale
+\item ogni processore costruisce la stessa clique iniziale
+\item tale clique ha almeno $L$ processori
+\end{itemize}
+Ogni processore conosce il valore iniziale di $L$ dei processori
+\begin{itemize}
+\item i processori raggiungono il consenso
+\end{itemize}
+\end{frame}
+
+\section*{}
+\begin{frame}\frametitle{Bibliografia}
+\begin{itemize}
+\item Fischer M. J., Lynch N. A., Paterson M. S., \emph{Impossibility of Distributed Consensus with One Faulty Process}, in "Journal of the Association for Computing Machinery", Vol. 32, No. 2, aprie 1985, pp. 374-382
+\item[]
+\item Locher T., Y. A. Pignolet, R. Wattenhofer, \textit{Principles of Distribuited Computing}, Zurich, Swiss Federal Institute of Technology, 2013
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\huge\textbf{Teorema FLP}\\\vspace*{0.5cm}
+\scriptsize Impossibilità del consenso distribuito in presenza di un processore guasto\\\vspace*{1cm}
+\normalsize Chiara Pierucci, Massimo Nocentini, Valentino Bruni\\\vspace*{.75cm}
+18 dicembre 2013
+\end{center}
+\end{frame}
+
+\end{document}

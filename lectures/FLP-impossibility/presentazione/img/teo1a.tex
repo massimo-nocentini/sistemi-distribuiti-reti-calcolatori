@@ -1,0 +1,33 @@
+\begin{tikzpicture}[scale=0.15]
+
+\tikzset{label/.style={minimum size=15pt,inner sep=0pt,},}
+\tikzset{conf/.style={circle,minimum size=15pt,inner sep=0pt,draw, top color=white ,bottom color=cyan!20, cyan,text=blue},}
+
+\tikzset{camminoUp/.style={->, line width=1pt, snake=coil, segment amplitude=1pt, segment aspect=0, segment length=4mm}}
+\tikzset{camminoDown/.style={->,line width=1pt, snake=coil, mirror snake, segment amplitude=1pt, segment aspect=0, segment length=4mm}}
+	\draw
+		(0,0) node[conf] (Ca) {$C_\alpha$}
+		(20,5) node[conf] (a1) {}
+		(20,0) node[conf] (a2) {}
+		(20,-5) node[conf] (a3) {}
+		;
+	
+
+	\draw[camminoUp](Ca) -- (a1);
+	\draw[camminoUp](Ca) -- (a2) node [label, right=10pt] (TextNode) {$\langle 0 \rangle$};
+	\draw(10,1) node [label] (TextNode) {$\sigma$}; 
+	\draw[camminoUp](Ca) -- (a3);
+
+
+	\draw
+		(0,-15) node[conf] (Cb) {$C_\beta$}
+		(20,-10) node[conf] (b1) {}
+		(20,-15) node[conf] (b2) {}
+		(20,-20) node[conf] (b3) {}
+		;
+	\draw[camminoUp](Cb) -- (b1) node [label, right=10pt] (TextNode) {$\langle 1 \rangle$};
+	\draw[camminoUp](Cb) -- (b2);
+	\draw[camminoUp](Cb) -- (b3);
+
+
+\end{tikzpicture}

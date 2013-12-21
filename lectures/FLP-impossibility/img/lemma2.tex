@@ -1,0 +1,33 @@
+\begin{tikzpicture}[scale=.75]
+
+
+\tikzset{label/.style={minimum size=15pt,inner sep=0pt,},}
+\tikzset{conf/.style={circle,minimum size=15pt,inner sep=0pt,draw, top color=white ,bottom color=cyan!20, cyan,text=blue},}
+
+\tikzset{camminoUp/.style={->, line width=1pt, snake=coil, segment amplitude=1pt, segment aspect=0, segment length=4mm}}
+\tikzset{camminoDown/.style={->, line width=1pt, snake=coil, mirror snake, segment amplitude=1pt, segment aspect=0, segment length=4mm}}
+	\draw
+		(0,2) node[conf] (c0) {$C_0$}
+		(0,0) node[conf] (c1) {$C_1$}
+
+
+		(8,-1) node[conf] (c11) {}
+		(4,1) node[conf] (a) {}
+		
+		(8,3) node[conf] (c00) {}
+
+		(8,3.5) node[label](l0){$dv=0$}
+		(8,-0.5) node[label](l1){$dv=1$}		
+		(4,1.5) node[label](lv0){$dv=v$};
+
+
+	\draw[camminoUp](c1) -- (c11);
+	\draw[camminoDown](c1) -- (a) node [label, midway, above] (TextNode) {$\sigma$};
+	\draw[camminoUp](c0) -- (c00);
+	\draw[camminoDown](c0) -- (a) node [label, midway, above] (TextNode) {$\sigma$};
+
+		
+
+
+	
+\end{tikzpicture}

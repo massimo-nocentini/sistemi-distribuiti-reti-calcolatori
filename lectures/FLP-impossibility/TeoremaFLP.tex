@@ -5,15 +5,20 @@
 %\usepackage{inputenc}
 \usepackage[T1]{fontenc} 
 \usepackage[square,numbers]{natbib} 
-\usepackage{amsmath, amsthm,tikz}
+\usepackage{amsmath, amsthm, amssymb, tikz}
 \usetikzlibrary{snakes}
 \newtheorem{definizione}{Definizione}  
 \newtheorem{lemma}{Lemma}
 \newtheorem{teorema}{Teorema}  
 \newtheorem{proprieta}{Proprietà}  
+\usepackage{titletoc}
+
+\titlecontents{section}[3em]{}{\contentslabel{1em}}{}{\titlerule*[1.5pc]{.}\contentspage}
+\titlecontents{subsection}[6em]{}{\contentslabel{2em}}{}{\titlerule*[1.5pc]{.}\contentspage}
+
 \begin{document}
 
-\title{\rmfamily\normalfont\spacedallcaps{Risultato FLP}}
+\title{\rmfamily\normalfont\spacedallcaps{Teorema FLP}}
 \author{\spacedlowsmallcaps{Chiara Pierucci}\\
 	\spacedlowsmallcaps{Massimo Nocentini}\\
 	\spacedlowsmallcaps{Valentino Bruni}}
@@ -24,16 +29,17 @@
 
 \begin{abstract}
   In questo lavoro ci proponiamo di studiare il risultato di
-  impossilit\`a del consenso in un sistema totalmente asincrono,
-  dimostrato da Fischer, Lynch e Paterson nel 1985.
+  impossibilità del consenso in un sistema totalmente asincrono,
+  dimostrato da Michael J. Fischer, Nancy A. Lynch e Michael
+  S. Paterson nel 1985.
 
   Nella nostra esposizione intendiamo riportare i principali risultati
   raggiunti dagli autori, integrando alcuni dettagli con brevi
   interventi che abbiamo sviluppato durante lo studio.
 
-  Questo nostro elaborato \`e diviso in due macro sezioni: la prima ha
-  un taglio pi\`u teorico e tratta la prova d'impossibilit\`a; la
-  seconda, invece, ha un taglio pi\`u implementativo e propone uno
+  Questo nostro elaborato è diviso in due macro sezioni: la prima ha
+  un taglio più teorico e tratta la prova d'impossibilità; la
+  seconda, invece, ha un taglio più implementativo e propone uno
   schema per risolvere il problema del consenso, aggiungendo alcune
   ipotesi.
 \end{abstract}
@@ -47,29 +53,30 @@ l'ambiente in cui andiamo a lavorare, identificando i concetti
 fondamentali che saranno oggetto di discussione.\\\\
 Immaginiamo che un insieme finito di processori debba collaborare con
 lo scopo di raggiungere una decisione comune. Per raggiungere questo
-obiettivo hanno la possibilit\`a di scambiarsi un numero finito di
+obiettivo hanno la possibilità di scambiarsi un numero finito di
 messaggi ed eseguire una computazione locale (di cui non ci interessa
-limitare la complessit\`a). Lo scambio di messaggi segue uno schema
-\emph{asincrono} di cui riportiamo, per chiarezza, le propriet\`a:
+limitare la complessità). Lo scambio di messaggi segue uno schema
+\emph{asincrono} di cui riportiamo, per chiarezza, le proprietà:
 \begin{description}
-\item[consegna] se un messaggio $m$ \`e stato inviato ad un processore
-  $p$, prima o poi $p$ ricever\`a $m$ una e una sola volta;
-\item[ritardo] un processore $p$ non pu\`o fare assunzioni sugli
-  istanti di tempo in cui ricever\`a i messaggi a lui destinati;
+\item[consegna] se un messaggio $m$ è stato inviato ad un processore
+  $p$, prima o poi $p$ riceverà $m$ una e una sola volta;
+\item[ritardo] un processore $p$ non può fare assunzioni sugli
+  istanti di tempo in cui riceverà i messaggi a lui destinati;
 \item[ordine] i messaggi destinati ad un processore $p$ possono non
   essere consegnati nell'ordine in cui sono stati inviati;
 \end{description}
 
-Nei sistemi che tratteremo si contempla la possibilit\`a che alcuni
+Nei sistemi che tratteremo si contempla la possibilità che alcuni
 processori possano subire un guasto di natura ``stop'', cessando di
-scambiare messaggi e eseguire una computazione locale, escludendo
-invece guasti di tipo bizantino.
+scambiare messaggi e di eseguire una computazione locale, escludendo
+invece guasti di tipo bizantino in cui il processore continua ad
+interagire ma in maniera scorretta.
 
-Inoltre, dalle propriet\`a sopra elencate, non \`e possibile rilevare
-possibili guasti in quanto un processore $p$ non \`e in grado di
+Inoltre, dalle proprietà sopra elencate si evince che non è possibile rilevare
+eventuali guasti in quanto un processore $p$ non è in grado di
 discriminare un processore guasto da un processore che semplicemente
 ha bisogno di molto tempo per eseguire la propria computazione. Di
-conseguenza nessuno di essi pu\`o escludere a priori gli altri per
+conseguenza, nessuno di essi può escludere a priori gli altri per
 prendere la propria decisione.
 
 \section{Risultato di impossibilit\`a FLP}
@@ -80,61 +87,62 @@ volutamente concisi e le abbiamo scritte immaginando i processori come
 semplici macchine di Turing:
 
 \begin{definizione}[Protocollo di consenso]
-  Un protocollo di consenso $P$ è un sistema asincrono composto da $n$
-  processori, con $n\geq2$. Ogni processore $P$ possiede un registro
+  Un protocollo di consenso $\mathtt{P}$ è un sistema asincrono composto da $n$
+  processori, con $n\geq2$. Ogni processore $p$ possiede un registro
   di input binario $x_p$, un registro di output $y_p$ con valori in
   $\{b,0,1\}$ e una memoria interna che si suppone infinita.
 \end{definizione}
 
 \begin{definizione}[Stato interno di un processore]
   Lo stato interno di un processore è costituito dal valore dei
-  registri di input e di output e dal contenuto della memoria.  Diremo
+  registri di input, di output e dal contenuto della memoria.  Diremo
   che un processore $p$ si trova in uno stato di decisione se $y_p \in
   \lbrace 0,1 \rbrace$. 
 \end{definizione}
 
 Sottolineiamo che una volta raggiunto uno stato di decisione, un
-processore $p$ non pu\`o pi\`u modificare il valore $y_p$.
+processore $p$ non può più modificare il valore $y_p$.
 
 \subsection{Astrazione del sistema asincrono}
 
 In questa sezione sviluppiamo le astrazioni necessarie per catturare i
-concetti e le propriet\`a del sistema asincrono che abbiamo descritto
+concetti e le proprietà del sistema asincrono che abbiamo descritto
 in Sezione \ref{sec:intro}.
 
 \begin{definizione}[Messaggio]
-  Un messaggio è una coppia $(p,m)$ dove $p$ è il processo
+  Un messaggio è una coppia $(p,m)$ dove $p$ è il processore
   destinatario e $m$ è il contenuto da recapitare a $p$.
 \end{definizione}
 
-Per formalizzare il ritardo arbitrario e il non ordine di ricezione
-dei messaggi, introduciamo l'entit\`a \emph{message buffer}, unico
-meccanismo per lo scambio di messaggi. Il lettore deve dunque
-immaginare che due processi non possono comunicare ``direttamente'',
-ma devono depositare i loro messaggi usando questa entit\`a.
+Per formalizzare il ritardo arbitrario e la ricezione non
+necessariamente in ordine dei messaggi, introduciamo l'entità
+\emph{message buffer}, unico meccanismo per lo scambio di messaggi. Il
+lettore deve dunque immaginare che due processori non possono
+comunicare ``direttamente'', ma devono depositare i loro messaggi
+usando questa entità.
 
 \begin{definizione}[Message buffer]
-  Un \emph{message buffer} \`e una struttura dati simile ad un
-  insieme, contenente messaggi inviati ma non ancora ricevuti dai vari
-  processori. Per garantire lo scambio di messaggi, un message buffer
-  supporta le seguenti operazioni:
+  Un \emph{message buffer} è una struttura dati simile ad un insieme,
+  contenente messaggi inviati ma non ancora ricevuti dai vari
+  processori. Per garantire lo scambio di messaggi, sono supportate le
+  seguenti operazioni:
 \begin{itemize}
-\item \texttt{send$(p,m)$}: il messaggio $(p,m)$ è inserito nel buffer
-  ed è pronto per essere recapitato;
+\item \texttt{send$(p,m)$}: il messaggio $m$ è inserito nel buffer ed
+  è pronto per essere recapitato al processore $p$;
 \item \texttt{receive$(p)$}: un messaggio viene recapitato a $p$. Più
   precisamente, il message buffer decide se estrarre un messaggio
-  $(p,m)$ e recapitare $m$ oppure inviare un messaggio speciale
-  $\perp$ lasciando inalterato il suo contenuto.
+  $(p,m)$ e recapitare $m$ a $p$ oppure inviare a $p$ un messaggio speciale,
+  $\perp$, lasciando inalterato il suo contenuto.
 \end{itemize}
 \end{definizione}
 La precedente definizione mette in risalto il non determinismo dello
-scambio di messaggi. Infatti, se un processo $p$ invoca la primitiva
+scambio di messaggi. Infatti, se un processore $p$ invoca la primitiva
 \texttt{receive(p)}, il message buffer può arbitrariamente decidere di
-inviare al processo $p$ il contenuto speciale $\perp$ anche in
+inviare al processore $p$ il contenuto speciale $\perp$ anche in
 presenza di un messaggio $m$. La risposta $\perp$ permette di
 rappresentare il ritardo arbitrario nella ricezione di un
-messaggio. Per formalizzare la propriet\`a di consegna di ogni
-messaggio ad un processo $p$, il message buffer, a seguito di infinite
+messaggio. Per formalizzare la proprietà di consegna di ogni
+messaggio ad un processore $p$, il message buffer, a seguito di infinite
 \texttt{receive(p)}, può rispondere $\perp$ un numero \emph{finito} di
 volte, non conosciuto a priori. Quindi, se un processore $p$ invoca la
 primitiva \texttt{receive(p)} infinite volte, ha la garanzia di
@@ -147,12 +155,12 @@ finito di \texttt{receive(p)}.
 \subsection{Grafo di esecuzione}
 
 In questa sezione formalizziamo il concetto di esecuzione del
-protocollo $P$, costruendo un grafo $G_P$ che ha per vertici le
+protocollo $\mathtt{P}$, costruendo un grafo $G_\mathtt{P}$ che ha per vertici le
 \emph{configurazioni} e per archi gli \emph{step}. Diamo le
 definizioni di quest'ultimi due concetti:
 
 \begin{definizione}[Configurazione]
-  Una \emph{configurazione} \`e costituita dall'insieme degli stati
+  Una \emph{configurazione} è costituita dall'insieme degli stati
   interni dei processori e dal contenuto del message buffer. Una
   configurazione si dice \emph{iniziale} quando il message buffer è
   vuoto e lo stato interno di ogni processore $p$ è tale che $y_p =
@@ -160,15 +168,15 @@ definizioni di quest'ultimi due concetti:
 \end{definizione}
 
 \begin{definizione}[Step]
-  Uno \emph{step} associa due configurazioni $C_1, C_2$ rispetto ad un
-  processore $p$ e a un messaggio $m \in M\cup\{\perp\}$, e
-  scriveremo $C_1 \xrightarrow{(p,m)} C_2$, se e solo
-  se $p$:
+  Uno \emph{step} associa due configurazioni $C_\alpha, C_\beta$
+  rispetto ad un processore $p$ e a un messaggio $m \in
+  M\cup\{\perp\}$. Scriviamo $C_\alpha\xrightarrow{(p,m)} C_\beta$, se
+  e solo se:
   \begin{enumerate}
-  \item esegue \texttt{receive($p$)} ottenendo $m$;
+  \item $p$ esegue \texttt{receive($p$)} ottenendo il messaggio $m$;
   \item in base al suo stato interno computa un nuovo stato e invia un
     insieme finito di messaggi agli altri processori, modificando
-    quindi il contenuto del message buffer.
+     il contenuto del message buffer.
   \end{enumerate} 
   Il comportamento deterministico del processore è completamente
   determinato dalla coppia $e=(p,m)$ chiamata evento, con lieve abuso
@@ -185,18 +193,22 @@ protocollo, pertanto definiamo il concetto di \emph{run}:
   che può essere applicata ad una configurazione $C$; se $\sigma$ è
   finita indichiamo con $\sigma(C)$ la configurazione raggiunta
   eseguendo $\sigma$ a partire da $C$. Una configurazione si dice
-  \emph{accessibile} se \`e raggiungibile da una configurazione
+  \emph{accessibile} se è raggiungibile da una configurazione
   iniziale.
 \end{definizione}
 
-Nel seguente lemma riportiamo un risultato generale che ci sar\`a
-utile nelle prove successive. L'idea alla base \`e quella di
+Nel seguente Lemma riportiamo un risultato generale che ci sarà
+utile nelle prove successive. L'idea alla base è quella di
 considerare due run in cui insiemi disgiunti di processori ricevono
 messaggi: se applichiamo i due run ad una stessa configurazione,
 arriveremo in due configurazioni distinte, in cui i messaggi destinati
 ai processori non coinvolti nel run applicato saranno disponibili e,
 quindi, possiamo scambiare l'applicazione dei run, raggiungendo la
-stessa configurazione (Figura \ref{fig:concatenazioneSchedule}).
+stessa configurazione come rappresentato in Figura \ref{fig:concatenazioneSchedule}.
+\begin{figure}[!h]
+  \centering \input{img/concatenazioneSchedule.tex}\caption{Run
+    disgiunti concatenati.}\label{fig:concatenazioneSchedule}
+\end{figure}
 
 \begin{lemma}
   \label{lemma:eventsInterleaving}
@@ -220,21 +232,17 @@ stessa configurazione (Figura \ref{fig:concatenazioneSchedule}).
   $\sigma_2(C_1)=\sigma_1(C_2)=C'$.
 \end{proof}
 
-\begin{figure}[!h]
-  \centering \input{img/concatenazioneSchedule.tex}\caption{Run
-    disgiunti concatenati}\label{fig:concatenazioneSchedule}
-\end{figure}
 
 \subsection{Consenso e correttezza totale del protocollo}
 
-Questa sezione prepara il lettore alla prova del teorema FLP,
+Questa sezione prepara il lettore alla prova del Teorema FLP,
 precisando che cosa significa raggiungere il consenso, in ambiente
-asincrono, per un insieme di processori. Nonostante nella realt\`a sia
+asincrono, per un insieme di processori. Nonostante nella realtà sia
 richiesto che tutti i processori non guasti decidano lo stesso valore,
 nel nostro studio ci siamo focalizzati sulla versione ``debole'' del
 problema: ci interessa dimostrare che pur considerando un solo
-processo guasto, esiste un run $\sigma$ in cui \emph{nessun}
-processore \`e in grado di raggiungere una decisione univoca.
+processore guasto, esiste un run $\sigma$ in cui \emph{nessun}
+processore è in grado di raggiungere una decisione univoca.
 
 \begin{definizione}[Valore di decisione di una configurazione]
   Una configurazione $C$ si dice che \emph{ha valore di decisione} $v
@@ -243,8 +251,8 @@ processore \`e in grado di raggiungere una decisione univoca.
 \end{definizione}
 
 \begin{definizione}[Protocollo parzialmente corretto]
-  Un protocollo di consenso $P$ si dice \emph{parzialmente corretto}
-  se il grafo di esecuzione $G_P$ soddisfa le seguenti propriet\`a:
+  Un protocollo di consenso $\mathtt{P}$ si dice \emph{parzialmente corretto}
+  se il grafo di esecuzione $G_P$ soddisfa le seguenti proprietà:
 \begin{itemize}
 \item nessuna configurazione accessibile ha più di un valore di
   decisione;
@@ -255,15 +263,15 @@ processore \`e in grado di raggiungere una decisione univoca.
 
 \begin{figure}[!h]
   \centering \input{img/parzialmenteCorretto.tex}\caption{Run
-    parzialmente corretti}\label{fig:parzialmenteCorretto}
+    parzialmente corretti.}\label{fig:parzialmenteCorretto}
 \end{figure}
 
 In Figura \ref{fig:parzialmenteCorretto} riportiamo nelle etichette
 delle configurazioni le sequenze dei contenuti dei registri di output:
 osserviamo che dalla configurazione iniziale $C_i$ si raggiungono sia
-configurazioni in cui un processore ha uno stato di decisione $0$ sia
+configurazioni in cui un processore ha uno stato di decisione $0$, sia
 configurazioni in cui un processore ha uno stato di decisione
-$1$. Inoltre da queste configurazioni con valore di decisione \`e
+$1$. Inoltre, da queste configurazioni con valore di decisione, è
 possibile raggiungere altre configurazioni con uguale valore di
 decisione.
 
@@ -281,31 +289,33 @@ decisione.
 
 \begin{definizione}[Run decisionale]
   Un run $\sigma$ si dice \emph{decisionale} se esiste una
-  configurazione $C$ raggiunta attraverso un evento $e\in \sigma$ tale
-  che almeno un processo raggiunge uno stato di decisione.
+  configurazione $C$, raggiunta attraverso un evento $e\in \sigma$, in cui
+  almeno un processore raggiunge uno stato di decisione.
 \end{definizione}
 
-\begin{definizione}[Protocollo totalmente corretto a meno di un guasto]
-  Un protocollo di consenso $P$ si dice \emph{totalmente corretto},
+\begin{definizione}[Protocollo totalmente corretto nonostante la presenza di un guasto]
+  Un protocollo di consenso $\mathtt{P}$ si dice \emph{totalmente corretto},
   nonostante la presenza di un guasto, se:
 \begin{itemize}
-\item  $P$ è parzialmente corretto;
-\item per ogni run $\sigma$ ammissibile allora $\sigma$ \`e decisionale.
+\item  $\mathtt{P}$ è parzialmente corretto;
+\item per ogni run $\sigma$ ammissibile allora $\sigma$ è decisionale.
 \end{itemize}
 \end{definizione}
 
-Nel seguito di questo documento ogni volta che useremo un run $\sigma$
-si assume che $\sigma$ sia almeno ammissibile. Inoltre useremo
-l'aggettivo ``concordi'' se due configurazioni hanno stesso valore di
-decisione, ``discordi'' altrimenti.
+Nel seguito della trattazione, ogni volta che useremo un run $\sigma$,
+si assume che sia ammissibile. Inoltre useremo l'aggettivo
+``concordi'' se due configurazioni hanno stesso valore di decisione,
+``discordi'' altrimenti.
 
-\begin{teorema}
-Non esistono protocolli di consenso totalmente corretti a meno di un guasto.
+\subsection{Dimostrazione dell'impossibilit\`a del consenso}
+
+\begin{teorema}[FLP]
+Non esistono protocolli di consenso totalmente corretti, nonostante la presenza di un guasto.
 \end{teorema}
 
 \begin{proof}
   L'idea alla base della prova è quella di procedere per assurdo,
-  assumendo che esista un protocollo $P$ totalmente corretto a meno di
+  assumendo che esista un protocollo $\mathtt{P}$ totalmente corretto a meno di
   un guasto: proveremo dei risultati intermedi per arrivare ad una
   contraddizione. La prova si articola in due fasi:
   \begin{enumerate}
@@ -316,9 +326,9 @@ Non esistono protocolli di consenso totalmente corretti a meno di un guasto.
     configurazione attraversata non ha un valore di decisione.
   \end{enumerate}
   La prima fase assicura che esistono delle esecuzioni in cui la
-  decisione non è predeterminata mentre la seconda assicura che esiste
-  una esecuzione in cui ogni processo non decide nessun valore.  Nel
-  seguito useremo tre propriet\`a per ``catalogare'' una
+  decisione non è predeterminata, mentre la seconda assicura che esiste
+  una esecuzione in cui ogni processore non decide nessun valore.  Nel
+  seguito useremo tre proprietà per ``catalogare'' una
   configurazione:
   \begin{itemize}
   \item una configurazione $C$ si dice \emph{bivalente} se l'insieme
@@ -327,63 +337,64 @@ Non esistono protocolli di consenso totalmente corretti a meno di un guasto.
   \item una configurazione $C$ si dice ${i}$-\emph{valente} se
     l'insieme dei valori di decisione delle configurazioni
     raggiungibili da $C$ è $\{i\}$, con $i\in \lbrace 0, 1
-    \rbrace$. Nel seguito diremo che una configurazione $C$ \`e
-    \emph{monovalente} se \`e o $0$-valente o $1$-valente, ma non
-    bivalente.
+    \rbrace$;
+  \item una configurazione $C$ è
+    \emph{monovalente} se è o $0$-valente o $1$-valente.
   \end{itemize}
 
   Osserviamo che l'insieme dei valori di decisione non può essere
-  vuoto in quanto, dato che il protocollo $P$ è supposto totalmente
+  vuoto in quanto, dato che il protocollo $\mathtt{P}$ è supposto totalmente
   corretto per ipotesi di assurdo, segue che il grafo di esecuzione
   contiene solo run decisionali, ovvero ogni run conterrà una
   configurazione con un valore di decisione.
 
 \begin{lemma}
 \label{lemma:bivalentInitialConfigurationExists}
-Il protocollo $P$ possiede una configurazione iniziale bivalente.
+Il protocollo $\mathtt{P}$ possiede una configurazione iniziale bivalente.
 \end{lemma}
 
 \begin{proof}
   Per assurdo, assumiamo che non esista alcuna configurazione iniziale
   bivalente. Dunque, tutte le configurazioni iniziali del grafo di
-  esecuzione di $P$ devono essere o $1$-valenti o
+  esecuzione di $\mathtt{P}$ devono essere o $1$-valenti o
   $0$-valenti. Costruiamo un ordinamento su di esse usando il seguente
-  criterio: una configurazione $C_1$ precede $C_2$ se e solo se i
-  valori iniziali dei processori sono gli stessi a meno di esattamente
-  un processore $p$ e $x_p^{(C_1)} < x_p^{(C_2)}$, dove abbiamo
-  indicato con $x_p^{(C_i)}$ il valore del registro $x_p$ nella
-  configurazione $C_i$. Usando tale ordinamento, dimostriamo che ne
-  esistono due consecutive tali che una risulta $0$-valente e l'altra
-  $1$-valente. Per mostrare ciò supponiamo che, senza perdita di
-  generalità, tutte le configurazioni ordinate siano
-  $0$-valenti. Tuttavia tale assunzione non rispetta la propriet\`a di
-  parziale correttezza del protocollo $P$, in particolare deve
-  esistere una configurazione con valore di decisione $1$
-  raggiungibile da una iniziale. Sia questa configurazione iniziale
-  $C_1$ e consideriamo una configurazione $C_0$ a lei consecutiva
-  (quest'ultima esiste sempre per come abbiamo definito
+  criterio: una configurazione $C_\alpha$ precede $C_\beta$ se e solo
+  se i valori iniziali dei processori sono gli stessi a meno di
+  esattamente un processore $p$ e $x_p^{(C_\alpha)} <
+  x_p^{(C_\beta)}$, dove abbiamo indicato con $x_p^{(C_i)}$ il valore
+  del registro $x_p$ nella configurazione $C_i$. Usando tale
+  ordinamento, dimostriamo che ne esistono due consecutive tali che
+  una risulta $0$-valente e l'altra $1$-valente. Per mostrare ciò
+  supponiamo che, senza perdita di generalità, tutte le configurazioni
+  ordinate siano $0$-valenti. Tuttavia tale assunzione non rispetta la
+  proprietà di parziale correttezza del protocollo $\mathtt{P}$, in
+  particolare deve esistere una configurazione con valore di decisione
+  $1$ raggiungibile da una iniziale. Sia questa configurazione
+  iniziale $C_1$ e consideriamo una configurazione $C_0$ a lei
+  consecutiva (quest'ultima esiste sempre per come abbiamo definito
   l'ordinamento). Dato che $C_0$ e $C_1$ sono consecutive, esse
-  differiscono per un solo valore iniziale in corrispondenza di un
+  differiscono per un solo valore iniziale, in corrispondenza di un
   processore $p$. Costruiamo un run decisionale $\sigma$ (non possiamo
-  fare altrimenti poichè $P$ è supposto totalmente corretto) in cui il
-  processore $p$ non è coinvolto, ovvero in cui $p$ non riceve
-  messaggi. Applicando $\sigma$ a $C_0$ e a $C_1$ si raggiungono due
-  configurazioni distinte in cui lo stato di ogni processo $p'$, tale
-  che $p'\neq p$, è uguale in entrambe; l'unica differenza è il
-  contenuto di $x_p$. Ma dato che $\sigma$ è un run decisionale solo
-  due valori potranno essere decisi: se sarà deciso $0$ allora $C_1$ è
-  bivalente, se verrà deciso $1$ allora $C_0$ è bivalente. In entrambi
-  i casi abbiamo raggiunto una contraddizione in quanto sia $C_0$ che
-  $C_1$ erano supposte non bivalenti.
-
-% Figura matrice collezione di configurazioni
-% commento relativo al fatto che sigma e dunque il contenuto del message buffer è fissato e deciso da noi. 
-
+  fare altrimenti poiché $\mathtt{P}$ è supposto totalmente corretto)
+  in cui il processore $p$ non è coinvolto, ovvero in cui $p$ non
+  riceve messaggi. Applicando $\sigma$ a $C_0$ e a $C_1$ si
+  raggiungono due configurazioni distinte in cui lo stato di ogni
+  processore $p'\neq p$, è uguale in entrambe; le due configurazioni
+  differiscono solo per il contenuto di $x_p$. Ma dato che $\sigma$ è
+  un run decisionale solo due valori potranno essere decisi: se sarà
+  deciso $0$ allora $C_1$ è bivalente, se verrà deciso $1$ allora
+  $C_0$ è bivalente; tale scenario è riportato in Figura
+  \ref{fig:lemma2}. In entrambi i casi abbiamo raggiunto una
+  contraddizione in quanto sia $C_0$ che $C_1$ erano supposte non
+  bivalenti.  \newpage
+\begin{figure}[!h]
+  \centering \input{img/lemma2.tex}\caption{Configurazione iniziale bivalente.}\label{fig:lemma2}
+\end{figure}
 \end{proof}
  
 \begin{lemma}
 \label{lemma:oneStepFromConfigInCYieldConfigInD}
-Sia $C$ una configurazione bivalente del protocollo $P$, e sia
+Sia $C$ una configurazione bivalente del protocollo $\mathtt{P}$, e sia
 $e=(p,m)$ un evento applicabile a $C$. Sia $\mathcal{C}$ l'insieme
 delle configurazioni raggiungibili da $C$ attraverso dei run $\sigma$
 tali che l'evento $e$ non appare in $\sigma$, e sia $\mathcal{D}$
@@ -391,17 +402,21 @@ l'insieme di tutte le configurazioni raggiungibili applicando $e$ ad
 ogni configurazione presente in $\mathcal{C}$. Allora $\mathcal{D}$
 contiene una configurazione bivalente.
 \end{lemma}
-Osserviamo che il processo $p$ può ricevere il messaggio in $C$ e
-dunque, per definizione di $\mathcal{C}$, sarà possibile, per $p$,
-ricevere $m$ anche in ogni configurazione in $\mathcal{C}$.
+Osserviamo che il processore $p$ può ricevere tale messaggio in $C$ e
+dunque, per definizione di $\mathcal{C}$, $p$ potrà ricevere $m$ anche
+in ogni configurazione in $\mathcal{C}$.
 \begin{proof}
   Per assurdo assumiamo che $\mathcal{D}$ non contenga alcuna
   configurazione bivalente, dunque ogni configurazione in
   $\mathcal{D}$ è o $0$-valente o $1$-valente. Siano $E_0$ ed $E_1$ le
   configurazioni rispettivamente $0$-valente e $1$-valente
-  raggiungibili da $C$ e analizziamo i seguenti due casi. Senza
-  perdita di generalità, ci focalizzeremo sullo studio di $E_0$ dal
-  momento che lo stesso ragionamento si può ripetere per $E_1$:
+  raggiungibili da $C$. Queste configurazioni possono essere raggiunte
+  utilizzando o meno l'evento $e$. Senza perdita di generalità, ci
+  focalizzeremo sullo studio di $E_0$ dal momento che lo stesso
+  ragionamento si può ripetere per $E_1$; analizziamo i seguenti due
+  casi riportati in Figura \ref{fig:lemma3}:
+
+
 \begin{itemize}
 \item $E_0 \in \mathcal{C}$ e dunque è possibile applicare l'evento
   $e$ alla configurazione $E_0$ ottenendo una configurazione $F_0 \in
@@ -412,112 +427,176 @@ ricevere $m$ anche in ogni configurazione in $\mathcal{C}$.
   contraddirebbe il valore di decisione di $E_0$ e quindi anch'essa
   risulta $0$-valente;
 \item $E_0 \not \in \mathcal{C}$, dunque deve esistere una
-  configurazione raggiungibile applicando $e$, ottenendo quindi una
-  nuova configurazione $F_0' \in \mathcal{D}$ dalla quale è possibile
-  raggiungere $E_0$. Dato che $F_0' \in \mathcal{D}$ allora $F_0'$ \`e
-  monovalente, ma dato che raggiunger\`a $E_0$, che è $0$-valente,
-  anche $F_0'$ deve esserlo per non violare la validità del
-  protocollo.
+  configurazione $C'$ raggiungibile da $C$ dalla quale, applicando
+  $e$, otteniamo una nuova configurazione $F_0' \in \mathcal{D}$ dalla
+  quale è possibile raggiungere $E_0$. Dato che $F_0' \in \mathcal{D}$
+  allora $F_0'$ è monovalente, ma dato che raggiungerà $E_0$, che è
+  $0$-valente, anche $F_0'$ deve esserlo per non violare la validità
+  del protocollo.
 \end{itemize}
+
+
+\begin{figure}[h]
+  \centering \input{img/lemma3.tex}\caption{Configurazioni bivalenti
+    in $\mathcal{D}$.}\label{fig:lemma3}
+\end{figure}
+\newpage
+
 Notiamo quindi che a prescindere dai due casi, $\mathcal{D}$ conterrà
 una configurazione $0$-valente. Tuttavia, ripetendo un ragionamento
 analogo per la configurazione $E_1$ si ottiene che $\mathcal{D}$ deve
-contenere anche una configurazione $1$-valente.
+contenere anche una configurazione $1$-valente. 
 
-Due configurazioni si dicono \emph{vicine} se una è raggiungibile
-dall'altra con l'applicazione di esattamente uno step, ovvero
-permettendo ad un processo $p$ di ricevere un messaggio $m$.
+Consideriamo adesso una configurazione $C_i$ e definiamo un
+ordinamento $\sqsubset$ tra coppie di run $\sigma_{j}$ e $ \sigma_{k
+}$, applicabili a $C_i$, tale che:
+\begin{displaymath}
+  \begin{split}
+    \sigma_{j} \sqsubset \sigma_{k} \leftrightarrow \exists \sigma:
+    \sigma_{j} &= (\sigma, (p_{r}, m_{r}), (p_{s}, m_{s}), (p,m),
+    \ldots) \wedge \\ \sigma_{k}&= (\sigma, (p_{s}, m_{s}), (p_{r},
+    m_{r}), (p,m), \ldots)
+  \end{split}
+\end{displaymath}
+e siano $\Sigma_j, \Sigma_k$  le rispettive esecuzioni del
+protocollo definite rispettivamente:
+\begin{displaymath}
+  \begin{split}
+    \Sigma_{\sigma_{j}} &= C_i \xrightarrow{\sigma} C_{\sigma}
+    \xrightarrow{(p_{r}, m_{r})}C_1 \xrightarrow{(p_{s},m_{s})}
+    C_{\alpha} \xrightarrow{(p,m)} D_{\alpha} \xrightarrow{\ldots}\\
+    \Sigma_{\sigma_{k}} &= C_i \xrightarrow{\sigma} C_{\sigma}
+    \xrightarrow{(p_{s}, m_{s})}C_2 \xrightarrow{(p_{r},m_{r})}
+    C_{\beta} \xrightarrow{(p,m)} D_{\beta} \xrightarrow{\ldots}\\
+  \end{split}
+\end{displaymath}
+Per il Lemma \ref{lemma:bivalentInitialConfigurationExists},
+consideriamo una configurazione iniziale bivalente $C_i$ ed ordiniamo
+i possibili run a partire da $C_i$ usando $\sqsubset$, in cui la
+consegna del messaggio $(p,m)$ viene ritardata. Dato che $C_i$ \`e
+bivalente esistono due esecuzioni $\Sigma_{\sigma_{\alpha}},
+\Sigma_{\sigma_{\beta}}$, con $\sigma_{\alpha} \sqsubset
+\sigma_{\beta}$, che attraversano due configurazioni in cui,
+rispettivamente, viene deciso il valore $0$ ed il valore $1$. Studiamo
+adesso le due configurazioni $C_{\alpha}, C_{\beta}$ in cui il
+messaggio $(p,m)$ viene consegnato, ovvero $e=(p,m)$ permette a
+$C_\alpha$ di raggiungere $d_0$ e a $C_\beta$ di raggiungere $d_1$ e,
+senza perdita di generalità, supponiamo che $d_0$ sia 0-valente e che
+$d_1$ sia 1-valente. Procediamo per casi ed analizziamo un altro
+possibile evento $e' = (p', m')$ applicabile, senza perdita di
+generalit\`a, a $C_{\alpha}$, come rappresentato in Figura
+\ref{fig:vicine}:
 
-\begin{lemma}
-  \label{lemma:neighborsConfigsYieldDiscordingConfigs}
-  Esiste una coppia $C_{\alpha}, C_{\beta} \in \mathcal{C}$ di
-  configurazioni vicine e siano $D_{\alpha} = e(C_{\alpha}), D_{\beta}
-  = e (C_{\beta})\in \mathcal{D}$ tali che, senza perdita di
-  generalit\`a, $D_{\alpha}$ \`e $0$-valente e $D_{\beta}$ \`e
-  $1$-valente.
-\end{lemma}
-\begin{proof}
-  Supponiamo, per assurdo, che ogni coppia di configurazioni vicine
-  debba raggiungere lo stesso valore di decisione. Data l'esistenza di
-  una configurazione iniziale bivalente, esisteranno due coppie di
-  configurazioni vicine $(C_{\alpha}, C_{\beta})$ e $(C_{\gamma},
-  C_{\eta})$ tali che $C_{\alpha}$ e $C_{\beta}$ sono, senza perdere
-  di generalit\`a, $0$-valenti mentre $C_{\gamma}$ e $C_{\eta}$
-  $1$-valenti. Ma dato che i run necessari per raggiungere ognuna di
-  esse sono run ammissibili, supponiamo che in $C_{\alpha}$ esista un
-  processo $q$ capace di invocare \texttt{receive(q)} infinite volte:
-  nel momento in cui $q$ ha ricevuto tutti i messaggi a lui destinati,
-  il message buffer restituir\`a il messaggio $(q, \perp)$ permettendo
-  da $C_{\alpha}$ di raggiungere ogni altra configurazione, e quindi
-  anche $C_{\gamma}$. Ma questo non \`e possibile in quanto
-  $C_{\alpha}$ e $C_{\gamma}$ sarebbero vicine dalle quali si
-  raggiungono configurazioni discordi.
-\end{proof}
 
 
-%FIGURA INDUZIONE
+% Due configurazioni si dicono \emph{vicine} se una è raggiungibile
+% dall'altra con l'applicazione di esattamente uno step, ovvero
+% permettendo ad un processore $p$ di ricevere un messaggio $m$.
 
-Per il Lemma \ref{lemma:neighborsConfigsYieldDiscordingConfigs}, sia
-$C_{\alpha}, C_{\beta} \in \mathcal{C}$ una coppia di configurazioni
-vicine, grazie all'evento $e'=(p',m')$, tali che, applicando l'evento
-$e=(p,m)$, raggiungono rispettivamente le configurazioni $d_0$ e $d_1
-\in \mathcal{D}$, tali che $d_{0}$ \`e $0$-valente e $d_{1}$ \`e
-$1$-valente, senza perdit\`a di generalit\`a. Analizziamo quindi i
-seguenti due casi:
+% \begin{lemma}
+%   \label{lemma:neighborsConfigsYieldDiscordingConfigs}
+%   Esiste una coppia $C_{\alpha}, C_{\beta} \in \mathcal{C}$ di
+%   configurazioni vicine tale che, detta $D_\alpha=e(C_\alpha)$ e detta
+%   $D_\beta=e(C_\beta)$, senza perdita di generalità, risultano
+%   rispettivamente 0-valente e 1-valente.
+% \end{lemma}
+% \begin{proof}
+%   Supponiamo, per assurdo, che ogni coppia di configurazioni vicine
+%   debba raggiungere lo stesso valore di decisione. Data l'esistenza di
+%   una configurazione iniziale bivalente, esisteranno due coppie di
+%   configurazioni vicine $(C_{\alpha}, C_{\beta})$ e $(C_{\gamma},
+%   C_{\eta})$ tali che $C_{\alpha}$ e $C_{\beta}$ sono, senza perdere
+%   di generalità, $0$-valenti mentre $C_{\gamma}$ e $C_{\eta}$
+%   $1$-valenti. Ma dato che i run necessari per raggiungere ognuna di
+%   esse sono run ammissibili, supponiamo che in $C_{\alpha}$ esista un
+%   processore $q$ capace di invocare \texttt{receive(q)} infinite
+%   volte: nel momento in cui $q$ ha ricevuto tutti i messaggi a lui
+%   destinati, il message buffer restituirà il messaggio $(q, \perp)$
+%   permettendo da $C_{\alpha}$ di raggiungere ogni altra
+%   configurazione, e quindi anche $C_{\gamma}$. Ma questo non è
+%   possibile in quanto $C_{\alpha}$ e $C_{\gamma}$ sarebbero vicine
+%   dalle quali si raggiungono configurazioni discordi. In Figura
+%   \ref{fig:induzione} è rappresentato l'assurdo appena dimostrato.
+% \end{proof}
+
+
+% \begin{figure}[!h]
+%   \centering \input{img/induzione.tex}\caption{Configurazioni vicine discordi.}\label{fig:induzione}
+% \end{figure}
+
+
+
 \begin{itemize}
-\item supponiamo che $p \neq p'$: per il Lemma
+\item Supponiamo che $p \neq p'$: per il Lemma
   \ref{lemma:eventsInterleaving}, possiamo applicare l'evento $e'$ a
   $d_0$ raggiungendo $d_1$, ovvero si riesce a passare da una
-  configurazione $0$-valente ad una $1$-valente. Questo non \`e
-  possibile in quanto si violerebbe la correttezza del protocollo;
+  configurazione $0$-valente ad una $1$-valente. Questo non è
+  possibile in quanto si violerebbe la correttezza del protocollo.
 
-\item supponiamo che $p=p'$. Allora esiste un run decisionale $\sigma$
-  che non coinvolge $p$ e sia $A=\sigma(C_{\alpha})$. Tale run risulta
-  applicabile, per il Lemma \ref{lemma:eventsInterleaving}, anche alle
-  configurazioni $d_0$ e $d_1$ producendo rispettivamente $E_0$ e
-  $E_1$ che, per la correttezza del protocollo, devono mantenere lo
-  stesso valore di decisione di $d_0$ e di $d_1$. Osserviamo che nella
-  configurazione $A$, $p$ è ancora in grado di ricevere messaggi ed,
-  in particolare, si possono applicare sia l' evento $e$, sia la
-  concatenazione di eventi $e \circ e'$. Risulta che $e(A)=E_0$ e che
-  $e(e'(A))=E_1$, ovvero la configurazione $A$ è bivalente,
-  contraddicendo l'ipotesi che $\sigma$ sia un run decisionale.
+\item Supponiamo che $p=p'$. Notiamo che non \`e possibile usare il
+  Lemma \ref{lemma:eventsInterleaving} per dedurre $d_0
+  \xrightarrow{e'} d_1$ in quanto l'insieme dei processori coinvolti
+  dai due eventi $e$ e $e'$ non \`e disgiunto: in questo caso i due
+  insiemi sono composti da un unico processore, $p$. Allora esiste un
+  run decisionale $\sigma$, nel quale si ritarda ancora la consegna
+  del messaggio $(p,m)$ (di conseguenza, $\sigma$ non coinvolge $p$) e
+  sia $A$ una configurazione tale che $A=\sigma(C_{\alpha})$. Tale run
+  risulta applicabile, per il Lemma \ref{lemma:eventsInterleaving},
+  anche alle configurazioni $d_0'$, con $d_0' = e'(d_0)$, e $d_1$
+  raggiungendo rispettivamente $E_0$ e $E_1$ che, per la correttezza
+  del protocollo, devono mantenere lo stesso valore di decisione di
+  $d_0$ e di $d_1$. Osserviamo che nella configurazione $A$ esistono
+  almeno due messaggi pendenti per $p$ ed, in particolare, si pu\`o
+  applicare sia la concatenazione $e' \circ e$, sia la concatenazione
+  $e \circ e'$. Risulta che $e'(e(A))=E_0$ e che $e(e'(A))=E_1$,
+  ovvero la configurazione $A$ è bivalente, contraddicendo l'ipotesi
+  che $\sigma$ sia un run decisionale.
 \end{itemize} 
 \end{proof}
+\begin{figure}[!h]
+  \centering \input{img/vicine.tex}\caption{$\mathcal{D}$ contiene configurazioni bivalenti.}\label{fig:vicine}
+\end{figure}
+
 Abbiamo quindi tutti gli elementi per terminare la dimostrazione
 iniziale, mostrando come si riesca a costruire un run ammissibile ma
-non decisionale, ovvero una sequenza di passi che attraversa infinite
+non decisionale, ovvero che attraversa infinite
 configurazioni solo bivalenti.
 
 Grazie al Lemma \ref{lemma:bivalentInitialConfigurationExists}
 sappiamo che esiste una configurazione iniziale bivalente, sia questa
 $C_i$. Consideriamo un processore $p_{\alpha}$ e sia
 $e_1^{\alpha},\ldots,e_j^{\alpha}$ una sequenza di eventi tali che
-$C_i \xrightarrow{e_1^{\alpha}=(p_{\alpha},\perp)} C_1
+$$C_i \xrightarrow{e_1^{\alpha}=(p_{\alpha},\perp)} C_1
 \xrightarrow{e_2^{\alpha}=(p_{\alpha},\perp)} \ldots
 \xrightarrow{e_{j-1}^{\alpha}=(p_{\alpha},\perp)} C_{j-1}
-\xrightarrow{e_j^{\alpha}=(p_{\alpha},m)} D_{j}$. Osserviamo che le
+\xrightarrow{e_j^{\alpha}=(p_{\alpha},m)} D_{j}.$$ Si ha che le
 configurazioni $C_1, \ldots, C_{j-1} \in \mathcal{C}$ rispetto
 all'evento $e_j^{\alpha}=(p_{\alpha},m)$ e quindi, per il Lemma
 \ref{lemma:oneStepFromConfigInCYieldConfigInD}, esiste $D_j \in
-\mathcal{D}$ tale che $D_j$ \`e bivalente. Consideriamo adesso un
-nuovo processore $p_{\beta}$ e costruiamo una sequenza di eventi
+\mathcal{D}$ tale che $D_j$ è bivalente. Consideriamo adesso un nuovo
+processore $p_{\beta}$ e costruiamo una sequenza di eventi
 $e_1^{\beta},\ldots,e_k^{\beta}$ come fatto per il processore
 $p_{\alpha}$ ed applichiamo tale sequenza alla configurazione $D_j$,
-raggiungendo la configurazione $D_k$. Dato che $D_j$ \`e bivalente,
+raggiungendo la configurazione $D_k$. Dato che $D_j$ è bivalente,
 ancora per il Lemma \ref{lemma:oneStepFromConfigInCYieldConfigInD},
-anche $D_k$ lo \`e. Ripetendo questo procedimento un numero arbitrario
-di volte (la scelta di un processore $p_{\eta}$ \`e sempre possibile
-in quanto esiste al pi\`u un processore guasto) usiamo le sequenze
-construite per definire un run $\sigma$ composto dalla loro
+anche $D_k$ lo è. Ripetendo questo procedimento un numero arbitrario
+di volte (la scelta di un processore $p_{\eta}$ è sempre possibile in
+quanto esiste al più un processore guasto) usiamo le sequenze
+costruite per definire un run $\sigma$ composto dalla loro
 concatenazione, ovvero $\sigma =
-(e_1^{\alpha},\ldots,e_j^{\alpha},e_1^{\beta},\ldots,e_k^{\beta},\ldots)$. Il
-run $\sigma$ \`e ammissibile ma non decisionale, contraddicendo
-l'ipotesi di aver supposto il protocollo $P$ totalmente corretto a
-meno di un guasto.
+(e_1^{\alpha},\ldots,e_j^{\alpha},e_1^{\beta},\ldots,e_k^{\beta},\ldots)$;
+si veda Figura \ref{fig:serpente}. Il run $\sigma$ è ammissibile ma
+non decisionale, contraddicendo l'ipotesi di aver supposto il
+protocollo $\mathtt{P}$ totalmente corretto a meno di un guasto.
 \end{proof}
 
-\section{Protocollo di consenso in presenza di processori inizialmente guasti}
+
+\begin{figure}[!h]
+  \centering \input{img/serpente.tex}\caption{Esistenza di un run
+    ammissibile ma non decisionale.}\label{fig:serpente}
+\end{figure}
+\newpage
+\section{Consenso in presenza di processori inizialmente guasti}
 
 Il protocollo che ci accingiamo a presentare si occupa di risolvere il
 problema del consenso supponendo di avere inizialmente la maggioranza
@@ -526,9 +605,13 @@ protocollo. Assumiamo che i processori non sappiano in anticipo quali
 di loro sono guasti ma di lavorare in un sistema non uniforme dove il
 numero $n$ dei processori presenti è noto, pertanto almeno
 $L=\left\lceil\dfrac{n+1}{2}\right\rceil$ processori si assumono non
-guasti. Il protocollo si articola in fasi.
+guasti. 
 
-\subsection{Prima fase}
+Il problema è dunque quello di informare i processori funzionanti di
+quali siano gli altri processori funzionanti al fine di raggiungere il
+consenso.
+
+\subsection{Costruzione di $G$}
 In primo luogo ogni processore effettua un broadcast di un messaggio
 contenente la propria \textsc{id} e attende di ricevere esattamente
 $L-1$ messaggi, per collezionare $L-1$ \textsc{id} degli altri
@@ -537,13 +620,19 @@ insieme. Ricevuti tali messaggi, ogni processore costruisce un grafo
 $G=(V,E)$ in cui $V$ contiene tutti gli $n$ processori mentre $E$
 contiene l'arco $(i,j)$ se $j$ riceve un messaggio da $i$.
 
-Illustriamo con un esempio questa prima fase. Consideriamo $n=8$ con
-$2$ processori guasti e rappresentiamo in Figura (REF) i punti di
-vista di $k,r$ e $j$. In particolare $k$ riceve messaggi da $\alpha,
-\beta, \gamma$ ed $r$, $r$ riceve messaggi da $\alpha, \beta, \gamma$
-e $j$, infine $j$ riceve messaggi da $\alpha, \beta, \gamma$ ed $r$.
+Illustriamo con un esempio questa prima fase. Consideriamo $n=5$ con
+$1$ processore guasto e rappresentiamo in Figura \ref{fig:povIniziali}
+i punti di vista dei nodi funzionanti. In particolare $\alpha$ riceve
+messaggi da $\beta$ e da $\gamma$, $\beta$ da $\alpha$ e da $\gamma$;
+infine sia $\gamma$ che $\delta$ ricevono messaggi da $\alpha$ e da
+$\beta$.
 
-\subsection{Seconda fase}
+\begin{figure}[!h]
+  \centering \input{img/povIniziali.tex}\caption{Situazione iniziale.}\label{fig:povIniziali}
+\end{figure}
+
+
+\subsection{Ampliamento di $G$}
 Ogni processore $p$ effettua un broadcast diffondendo il proprio
 valore iniziale e l'insieme dei processori da cui ha ricevuto un
 messaggio nella fase precedente. Questo secondo broadcast fa si che
@@ -551,17 +640,25 @@ ogni processore $p$ riceva informazioni sia dagli $L-1$ processori già
 ``conosciuti'' nella prima fase, sia dai restanti processori non
 guasti, aggiornando il proprio grafo $G$ con le nuove informazioni.
 
-Nel nostro esempio $k$ si aspetta di ricevere messaggi da $\alpha,
-\beta, \gamma$ ed $r$ ma, per effetto del broadcast, riceverà un
-messaggio anche da $j$. La sua conoscenza dopo aver collezionato
-questi messaggi comprende
-$\texttt{ancestors}(\alpha)\cup\texttt{ancestors}(\beta)\cup\texttt{ancestors}(\gamma)\cup\texttt{ancestors}(r)\cup\texttt{ancestors}(j)$.
 
-\subsection{Terza fase}
+
+Nel nostro esempio $\alpha$ si aspetta di ricevere messaggi da $\beta$
+e da $\gamma$ ma, per effetto del broadcast, riceverà un messaggio
+anche da $\delta$ come rappresentato in Figura
+\ref{fig:ampliamento}. La sua conoscenza dopo aver collezionato questi
+messaggi comprende
+$\texttt{ancestors}(\beta)\cup\texttt{ancestors}(\gamma)\cup\texttt{ancestors}(\delta)$.
+
+\begin{figure}[!h]
+  \centering \input{img/ampliamento.tex}\caption{Situazione in seguito
+    del broadcast.}\label{fig:ampliamento}
+\end{figure}
+
+\subsection{Chiusura transitiva}
 Prima di descrivere la terza fase diamo un suggerimento su come
 immaginarsi questo procedimento. Ogni processore $p$ ``disegna'' il
 suo grafo usando colori diversi per rappresentare gli archi incidenti
-ai processori ``conosciuti'' nella prima fase più quelli incedinti ai
+ai processori ``conosciuti'' nella prima fase più quelli incidenti ai
 processori ``conosciuti'' via broadcast nella seconda: per ogni
 processore $q$ da cui $p$ ha ricevuto un messaggio, $p$ usa un colore
 $c_q$, diverso dagli altri usati, per colorare gli archi incidenti a
@@ -577,18 +674,29 @@ chiudere transitivamente il grafo costruendo $G^+$; con questa
 operazione si aggiungono eventuali self-loop e si trasformano i
 cammini presenti in archi diretti.
 
-\subsection{Quarta fase}
+In Figura \ref{fig:chiusura} è riportata la chiusura transitiva
+dell'esempio.
+
+\begin{figure}[!h]
+  \centering \input{img/chiusura.tex}\caption{Chiusura transitiva.}\label{fig:chiusura}
+\end{figure}
+
+\subsection{Clique iniziale}
 Per arrivare al consenso è necessario che $L$ processori decidano in
 modo concorde; per raggiungere questo obiettivo usiamo il fatto che
 hanno la stessa conoscenza per costruire una clique iniziale.
 \begin{definizione}
   Considerando la chiusura transitiva $G^+$, un processore $p$
-  appartiene a una clique iniziale se e solo se $\forall q:
-  q\in\texttt{ancestors}(P)\rightarrow p\in\texttt{ancestors}(q)$.
+  appartiene a una clique iniziale $IC$ se e solo se $$\forall q:
+  q\in\texttt{ancestors}(p)\rightarrow p\in\texttt{ancestors}(q).$$
 \end{definizione} 
 Ogni processore $p$ analizza ogni $q \in \texttt{ancestors(p)}$ e
-determina se $q$ appartiene ad una clique iniziale. Dimostriamo alcune
-proprietà delle clique così ottenute.
+determina se $q$ appartiene ad una clique iniziale.
+
+Nel nostro esempio, i nodi $\alpha$, $\beta$ e $\gamma$ appartengono
+alla clique iniziale e riescono a raggiungere il consenso.
+
+ Dimostriamo alcune proprietà delle clique così ottenute.
 
 
 \begin{teorema}[Esistenza]
@@ -601,17 +709,19 @@ proprietà delle clique così ottenute.
   $\beta$ sono connessi in $G$ tramite un arco, allora anche in $G^+$
   sono connessi con un arco, altrimenti se $\alpha$ e $\beta$ sono
   connessi in $G$ tramite un cammino, allora in $G^+$ lo sono tramite
-  un arco. Per definizione $p\in IC\leftrightarrow\forall q:
-  q\in\texttt{ancestors}(p)\rightarrow p\in\texttt{ancestors}(q)$ e,
-  equivalentemente, vale $p\not\in IC\leftrightarrow\exists q:
-  q\in\texttt{ancestors}(p)\wedge p\not\in\texttt{ancestors}(q)$.
+  un arco. 
+  
+  Per definizione $$p\in IC\leftrightarrow\forall q:
+  q\in\texttt{ancestors}(p)\rightarrow p\in\texttt{ancestors}(q)$$ e,
+  equivalentemente, vale $$p\not\in IC\leftrightarrow\exists q:
+  q\in\texttt{ancestors}(p)\wedge p\not\in\texttt{ancestors}(q).$$
 
   Supponiamo per assurdo che $\forall p: p\not\in IC$: scegliamo
-  arbitrariamente un processo $p$ e sia $q \in \texttt{ancestors}(p)$;
-  poichè nessun processore $k \in G^+$ appartiene ad una clique
+  arbitrariamente un processore $p$ e sia $q \in \texttt{ancestors}(p)$;
+  poiché nessun processore $k \in G^+$ appartiene ad una clique
   iniziale allora $p \not \in \texttt{ancestors}(q)$. Essendo anche $q
   \in G^+$ possiamo ripetere lo stesso argomento per $q$, ovvero
-  esisterà un processo $r \in \texttt{ancestors}(q)$ tale che $q \not
+  esisterà un processore $r \in \texttt{ancestors}(q)$ tale che $q \not
   \in \texttt{ancestors}(r)$. \'E utile osservare che $r$ non può
   essere proprio $p$, altrimenti $p \in \texttt{ancestors}(q)$, caso
   escluso precedentemente. Possiamo continuare a scegliere in modo
@@ -621,9 +731,12 @@ proprietà delle clique così ottenute.
   \not \in \texttt{ancestors}(t)$. Ma scegliendo $t$ si crea un ciclo,
   condizione sufficiente per introdurre un processore nella clique,
   contraddicendo l'ipotesi che $G^+$ non contiene clique
-  iniziali
+  iniziali.
 \end{proof}
-
+\begin{figure}[!h]
+  \centering \input{img/esistenza.tex}\caption{Esistenza della clique
+    iniziale.}\label{fig:chiusura}
+\end{figure}
 \begin{teorema}[Estensione]
 \label{teorema:estensioneInitialClique}
   Ogni clique iniziale ha almeno $L$ processori.
@@ -631,29 +744,33 @@ proprietà delle clique così ottenute.
 \begin{proof}
   Assumiamo per assurdo che esista una clique iniziale $IC$ tale che
   $|IC|\leq L-1$.  Consideriamo la prima fase del protocollo dove ogni
-  processo non guasto riceve esattamente $L-1$ messaggi. Per il
+  processore non guasto riceve esattamente $L-1$ messaggi. Per il
   Teorema \ref{teorema:esistenzaInitialClique}, esiste almeno un
   processore non guasto $c \in IC$, il quale avrà ricevuto $L-1$
   messaggi avendo $L-1 = |\texttt{ancestors(c)}|$. Studiamo due casi
+  in Figura \ref{fig:estensione}.
   \begin{itemize}
-  \item se $\forall q \in \texttt{ancestors}(c) \rightarrow q \in IC$
+  \item Se $\forall q \in \texttt{ancestors}(c) \rightarrow q \in IC$
     allora, essendoci al massimo $L-1$ processori nella clique
     iniziale, $c$ deve essere uno dei processori da cui ha ricevuto un
-    messaggio. Ma questo è impossibile poichè nella prima fase nessun
-    processore invia messaggi a se stesso;
-  \item altrimenti deve esistere un processore $q \in
+    messaggio. Ma questo è impossibile poiché nella prima fase nessun
+    processore invia messaggi a se stesso.
+  \item Altrimenti deve esistere un processore $q \in
     \texttt{ancestors}(c)$, tale che $q \not \in IC$, quindi esiste un
-    processore $r \in \texttt{ancestors} (q)$, tale che $q \not \in
+    processore $r \in \texttt{ancestors} (q)$, secondo il quale $q \not \in
     \texttt{ancestors} (r)$. Dato che stiamo lavorando su $G^+$,
-    allora per transitivit\`a vale $r \in \texttt{ancestors} (c)$ e
+    allora per transitività vale $r \in \texttt{ancestors} (c)$ e
     quindi, dato che per ipotesi $c \in IC$, segue che $r \in
     \texttt{ancestors} (c) \rightarrow c \in \texttt{ancestors}
     (r)$. Quest'ultima implicazione ci permette di arrivare ad una
-    contraddizione in quanto, per transitivit\`a, si ha $q \in
+    contraddizione in quanto, per transitività, si ha $q \in
     \texttt{ancestors}(r)$, caso escluso precedentemente.
   \end{itemize}
 \end{proof}
-
+\begin{figure}[!h]
+  \centering \input{img/estensione.tex}\caption{Estensione della
+    clique iniziale.}\label{fig:estensione}
+\end{figure}
 
 \begin{teorema}[Unicità]
   \label{teorema:unicitaInitialClique}
@@ -661,17 +778,22 @@ proprietà delle clique così ottenute.
 \begin{proof}
   Assumiamo che esistano due clique iniziali $IC_1, IC_2$ che, per il
   Teorema \ref{teorema:estensioneInitialClique}, hanno almeno $L$
-  processori. Dato che $L>\dfrac{n}{2}$, le due clique hanno almeno un
-  processore $p$ in comune. Per definizione di initial clique, $p$ è
+  processori e, dato che $L>n/2$, supponiamo che solo il processore
+  $p$ sia in comune. Per definizione di clique iniziale, $p$ è
   raggiungibile da tutti i processori di $IC_1$ e di $IC_2$ e,
   viceversa, tutti i processori delle due clique sono raggiungibili da
   $p$. Per transitività, tutti i processori di $IC_1$ possono
   raggiungere quelli di $IC_2$ passando per $p$ così come tutti i
   processori di $IC_2$ possono raggiungere quelli di $IC_1$ passando
-  per $p$. In tal modo le due clique risultano fuse a formarne una
-  unica, contraddicendo il fatto che $IC_1$ e $IC_2$ avevano solo $p$
-  in comune.
+  per $p$. Questo scenario è rappresentato in Figura
+  \ref{fig:unicita}. In tal modo le due clique risultano fuse a
+  formarne una unica, contraddicendo il fatto che $IC_1$ e $IC_2$
+  avevano solo $p$ in comune.
 \end{proof}
+
+\begin{figure}[!h]
+  \centering \input{img/unicita.tex}\caption{Unicità della clique iniziale.}\label{fig:unicita}
+\end{figure}
 
 \begin{teorema}[Conoscenza]
 \label{teorema:conoscenzaInitialClique}
@@ -683,17 +805,17 @@ proprietà delle clique così ottenute.
   costruiscono due clique iniziali $IC_p$ e $IC_q$ tali che $IC_p\neq
   IC_q$, differendo per almeno un processore $z$. Nel seguito
   assumiamo, senza perdita di generalità, che $p$ inserisca $z$ in
-  $IC_q$ mentre $q$, erroneamente, non faccia lo stesso. Studiamo dal
-  punto di vista di $q$: poichè $q$ ha deciso che $z$ non appartiene
+  $IC_p$ mentre $q$, erroneamente, non lo faccia stesso. Studiamo dal
+  punto di vista di $q$: poiché $q$ ha deciso che $z$ non appartiene
   ad $IC_q$, deve esistere $\gamma \in \texttt{ancestors}(z)$ tale che
   $z \not \in \texttt{ancestors}(\gamma)$ (a torto) mentre, dal punto
   di vista di $p$, $z \in \texttt{ancestors}(\gamma)$ (a
-  ragione). Distinguiamo due casi:
+  ragione). Distinguiamo i due casi rappresentati in Figura \ref{fig:conoscenza}:
 \begin{itemize}
 \item se $q$ ha ricevuto un messaggio da $\gamma$ nella prima fase,
   allora $\gamma \in \texttt{ancestors}(q)$ e nella seconda fase, $q$
   riceverà da $\gamma$ l'informazione che $z \in
-  \texttt{ancestors}(\gamma)$ (in quanto questo \`e il caso, per la
+  \texttt{ancestors}(\gamma)$ (in quanto questo è il caso, per la
   ragione di $p$);
 \item se $q$ non ha ricevuto alcun messaggio da $\gamma$ nella prima
   fase allora riceverà un messaggio di broadcast nella seconda,
@@ -704,22 +826,46 @@ In entrambi i casi $q$ ottiene la conoscenza che $z \in
 $z$ in $IC_q$, contraddicendo la sua scelta.
 \end{proof}
 
+\begin{figure}[!h]
+  \centering \input{img/conoscenza.tex}\caption{Costruzione della clique iniziale.}\label{fig:conoscenza}
+\end{figure}
+
 \begin{teorema}[Correttezza]
   Il protocollo raggiunge il consenso se almeno $L$ processori sono
-  non guasti e non si verificano guasti durante
+  non guasti e se non si verificano ulteriori guasti durante
   l'esecuzione.\end{teorema}
 \begin{proof}
   Sia $G^+$ una chiusura transitiva di un grafo relativo al protocollo
   descritto: per il Teorema \ref{teorema:esistenzaInitialClique} e per
-  il Teorema \ref{teorema:unicitaInitialClique}, in $G^+$ esiste un
-  unica clique iniziale. Per il Teorema
+  il Teorema \ref{teorema:unicitaInitialClique}, in $G^+$ esiste
+  un'unica clique iniziale. Per il Teorema
   \ref{teorema:conoscenzaInitialClique}, ogni processore costruisce la
   stessa clique iniziale e questa ha almeno $L$ processori per il
-  Teorema \ref{teorema:estensioneInitialClique}. Pertanto, dopo la
+  Teorema \ref{teorema:estensioneInitialClique}.
+  
+  Pertanto, dopo la
   seconda fase del protocollo, ogni processore conosce il valore
   iniziale di almeno la maggioranza dei processori ed, applicando una
-  regola deterministica e stabilita a priori, \`e possibile
-  raggiungere il consenso per i $L$ processori non guasti.
+  regola deterministica e stabilita a priori, è possibile
+  raggiungere il consenso per gli $L$ processori non guasti.
 \end{proof}
+
+
+
+\begin{thebibliography}{}
+
+\bibitem{FLP} Fischer M. J., Lynch N. A., Paterson M. S.,
+  \emph{Impossibility of Distributed Consensus with One Faulty
+    Process}, in "Journal of the Association for Computing Machinery",
+  Vol. 32, No. 2, Aprile 1985, pp. 374-382.
+
+\bibitem{ETH} Locher T., Y. A. Pignolet, R. Wattenhofer,
+  \textit{Principles of Distribuited Computing}, Zurich, Swiss Federal
+  Institute of Technology, 2013.
+
+
+\end{thebibliography}
+
+
 
 \end{document}

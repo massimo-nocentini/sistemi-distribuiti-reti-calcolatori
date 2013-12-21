@@ -1,0 +1,34 @@
+\begin{tikzpicture}[scale=.65]
+
+
+\tikzset{label/.style={minimum size=15pt,inner sep=0pt,},}
+\tikzset{conf/.style={circle,minimum size=15pt,inner sep=0pt,draw, top color=white ,bottom color=cyan!20, cyan,text=blue},}
+
+\tikzset{camminoUp/.style={->, line width=1pt, snake=coil, segment amplitude=1pt, segment aspect=0, segment length=4mm}}
+\tikzset{camminoDown/.style={->, line width=1pt, snake=coil, mirror snake, segment amplitude=1pt, segment aspect=0, segment length=4mm}}
+	\draw
+		(0,-1) node[conf] (c) {$C$}
+	
+		(4,-8) node[label] (x) {}	
+
+
+		(-1,-4) node[conf] (cp) {$C'$}
+		(0,-7) node[conf] (f1) {$F'_0$}	
+		(-2,-8) node[conf] (e1) {$E_0$}	
+
+		;
+
+
+	\draw[camminoDown](c) -- (cp);
+	\draw[->,line width=1pt](cp) to [bend right=15]  (f1);\draw(-1.1,-5.5)node[label]{$e$};
+	\draw[camminoDown](f1) -- (e1);
+
+\draw (0,-4) ellipse (2.5cm and 1cm);\draw (2,-3) node (x) {$\mathcal{C}$};
+\draw (1,-7) ellipse (2.5cm and 1cm);\draw (3,-6) node (x) {$\mathcal{D}$};
+
+
+
+
+
+	
+\end{tikzpicture}
