@@ -1,0 +1,152 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{sdrcform1}
+\usepackage[utf8x]{inputenc} 
+
+\pagesettings
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Intestazione
+% Campi da non modificare
+\newcommand{\degreename}{(Ingegneria) Informatica}
+\newcommand{\coursename}{SDRC}
+\newcommand{\professorname}{Pierluigi Crescenzi}
+\newcommand{\professoremail}{pierluigi.crescenzi@unifi.it}
+\newcommand{\issuedate}{4 Ottobre 2013}
+% Campi da riempire
+% Il titolo  (quello della dispensa)
+\newcommand{\notetitle}{Pastry}
+% L'autore (gli autori)  (sono) quello (quelli) della dispensa
+\newcommand{\authornames}{Carli, Cimato, Salvi}
+% Il lettore  (chi sta compilando il modulo)
+\newcommand{\refereename}{Pierucci, Nocentini, Bruni}
+\newcommand{\refereeemail}{}
+% Data di consegna del modulo
+\newcommand{\preparedate}{31 Dicembre 2013}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Giudizi (mettere il voto nelle parentesi graffe)
+% Valutazione globale
+\newcommand{\recommendation}{3}
+% 1=Ottimo/2=Distinto/3=Buono/4=Discreto/5=Sufficiente
+% Come giudicheresti le tue conoscenze nel settore?
+\newcommand{\competence}{3} 
+% 1=Molto esperto/2=Esperto/3=Interessato/4=Competente
+% Quanto sei sicuro del tuo giudizio?
+\newcommand{\confidence}{2}
+% 1=Molto confidente/2=Confidente/3=Abbastanza confidente
+% Quanto sforzo ha richiesto leggere la dispensa?
+\newcommand{\effort}{2}
+% 1=Grande/2=Ragionevole/3=Poco/4=Quasi nullo
+% Quanto bene hai capito la dispensa?
+\newcommand{\comprehension}{2}
+% 1=Perfettamente/2=Maggioranza/3=Idee/4=Abbastanza confuso/5=Molto confuso
+% Quanti dettagli hai verificato?
+\newcommand{\details}{2} 
+% 1=Tutti/2=Maggior parte/3=Abbastanza/4=Pochi
+% Quanto le note integrano quanto detto a lezione?
+\newcommand{\originality}{2}
+% 1=Molto/2=Abbastanza/3=Poco/4=Per nulla
+% Come giudichi le dimostrazioni incluse nelle note?
+\newcommand{\proofs}{3} 
+% 1=Belle/2=Piacevoli/3=Allo scopo/4=Brutte
+% Come giudichi i risultati inclusi nelle note?
+\newcommand{\correctness}{2}
+% 1=Corretti/2= Quasi sicuramente corretti/3=Probabilmente corretti/4= Probabilmente non corretti  
+% 5=Dimostrazioni sbagliate/6=Risultati sbagliati/7=Non so dirlo
+% Quale livello di conoscenze e' necessario per leggere le note?
+\newcommand{\accessibility}{4}
+% 1=Esperto/2=Specialista/3=Teorico/4=Informatico
+% Quanto bene sono scritte le dispense?
+\newcommand{\presentation}{3}
+% 1=Quasi senza errori/2=Buona/3=Adeguata/4=Superficiale/5=Incomprensibile
+% Quanto lunghe sono le dispense?
+\newcommand{\density}{2} 
+% 1=Troppo/2=Adeguato/3=Poco/4=Troppo poco
+% Cosa pensi dei dettagli che mancano?
+\newcommand{\missing}{5}
+% 1=Probabilmente sbagliati/2=Spesso incomprensibili/3=Grande sforzo
+% 4=Sforzo/5=Piccolo sforzo/6=Nessuno sforzo/7=Troppi dettagli
+% Cosa pensi della qualita' dell'italiano?
+\newcommand{\italian}{2}
+% 1=Eccellente/2=Buono/3=Adeguato/4=Sotto lo standard
+% 5=Non adeguato/6=Pessimo
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+% Commenti (da inserire obbligatoriamente)
+% Inserisci i tuoi commenti, ovvero una valutazione qualitativa
+% della dispensa. Tali commenti devono anche spiegare le
+% valutazioni quantitative date in precedenza
+\begin {document}
+\theform
+\begin{formalreport}
+  \textbf{Commenti}\\
+  Il lavoro del gruppo lo riteniamo sufficiente in quanto non abbiamo
+  trovato spunti individuali che lo differenziano dall'articolo
+  originale: in molti versi i paragrafi riportati sono nello stesso
+  ordine, con le stesse frasi e stessa cadenza. 
+
+  L'italiano usato ci risulta abbastanza fluido, sono presenti alcuni
+  typo ed avremo preferito una maggior continuit\`a tra la divisione
+  in sezioni.
+
+  Apprezzabile il tentativo di dar risalto con due teoremi a due idee
+  fondamentali e l'aggiunta di Figura 2 e Figura 5 per aiutare
+  l'esposizione.
+
+  \textbf{Dispensa}\\
+  La dispensa \`e stata strutturata in modo molto simile all'articolo
+  originale. Dopo un'introduzione al contesto in cui il lavoro si
+  colloca, segue una sezione in cui viene descritta l'overlay network
+  \emph{Pastry}, dando particolare risalto alle informazioni che ogni
+  nodo mantiene. La descrizione della tabella di routing ci \`e
+  sembrata poco chiara in quanto, con fatica, si distinguono i
+  soggetti nelle frasi che spiegano il significato delle righe della
+  tabella. Nelle definizioni dei due insiemi \emph{neighborhood} e
+  \emph{leaf} si utilizzano rispettivamente i concetti di
+  \emph{metrica di prossimit\`a} e di \emph{vicino} di cui non si
+  danno ulteriori informazioni, anche nel seguito verranno lasciati
+  abbastanza vaghi.
+
+  \`E apprezzabile il tentativo di dare risalto al Teorema 1.1
+  rispetto all'articolo, dove l'idea e la sua prova vengono date in un
+  paragrafo senza particolare enfasi. Nonostante questo, nella prova
+  non abbiamo capito il risultato nell'ottica dell'alta probabilit\`a
+  come definita a lezione.
+
+  La dispensa non riporta una sezione nella quale si mette in evidenza
+  una possibile interfaccia a scopo implementativo: riteniamo che
+  sarebbe stata utile per capire quali servizi lo strato di
+  indirezione introdotto da Pastry offre alle applicazioni che
+  desiderano sfruttare le sue caratteristiche, e quali eventi possono
+  essere gestiti in seguito al routing dei messaggi.
+
+  Nella Sezione 4 riguardante l'aggiunta di nodi, vi \`e discrepanza
+  rispetto all'articolo in quanto si riporta ``$x$, che avr\`a in
+  generale un nodeId distante da quello di $a$, invia quindi uno
+  speciale messaggio di join ad $a$ con chiave $x$'', mentre
+  nell'originale $x$ invia una richiesta di join ad $a$,
+  successivamente \`e $a$ a fare il routing di un pacchetto contente
+  $x$ come chiave. Per quanto riguarda la costruzione della routing
+  table del nuovo nodo $x$ non viene giustificata la strategia
+  riportata, a differenza dell'articolo in cui, in pi\`u, viene fatta
+  una osservazione sul carattere ``ottimistico'' di tale strategia.
+
+  Nella Dimostrazione 1.2 non ci \`e chiaro perch\`e la costruzione
+  della tabella $R$, usando le informazioni delle tabelle dei nodi
+  attraversati nel cammino $a \rightarrow \ldots \rightarrow z$,
+  preserva la propriet\`a di \emph{localit\`a}: questa dimostrazione
+  non \`e del tutto formale neppure nell'articolo di studio.
+
+  Nella Sezione 6.2 il risultato riportato non \`e coerente in quanto,
+  nello stesso paragrafo, si arriva a conclusioni opposte (forse una
+  svista nel secondo punto a met\`a pagina).
+
+  \textbf{Presentazione}\\
+  La presentazione ci \`e sembrata spedita anche se non del tutto
+  chiara, in particolare le tabelle riportate ci sono sembrate
+  complesse per una prima esposizione dell'argomento.
+ 
+\end{formalreport}
+
+\end {document}

@@ -1,0 +1,251 @@
+\typeout{sdrcform.sty  Version 1.0  January 17, 2007}
+
+\sloppy
+
+\newcommand{\pagesettings}{
+\setlength{\columnsep}{0.25in}
+}
+
+\newcommand{\uncheckedbox}{
+\begin{picture}(10,10)
+\put(0,-1){\framebox(10,10){}}
+\end{picture}}
+\newcommand{\checkedbox}{
+\begin{picture}(10,10)
+\thinlines
+\put(0,-1){\framebox(10,10){}}
+\thicklines
+\put(0,-1){\line(1,1){10}}
+\put(0,9){\line(1,-1){10}}
+\end{picture}}
+
+\newcommand{\cbox}[2]{\ifnum #1=#2 \checkedbox \else \uncheckedbox \fi}
+
+\newcommand{\majorheading}[1]{\vspace{-0.1in}\section*{#1}}
+\newcommand{\heading}[1]{\vspace{-0.1in}\subsection*{#1}}
+\newcommand{\subheading}[1]{\vspace{-0.1in}\subsubsection*{#1}}
+
+\newcommand{\theform}{
+\twocolumn[
+\bigskip
+{\Huge
+\begin{center}
+Un modulo di recensione per\\
+Sistemi Distribuiti e Reti di Calcolatori
+\end{center}
+}
+
+\noindent
+{\Large
+\begin{tabular*}{\textwidth}{@{}ll@{\extracolsep{\fill}}l@{}}
+{\sc Titolo:} & {\normalsize \notetitle}&\\
+\cline{2-3}
+{\sc Autore/i:}& {\normalsize \authornames}&\\
+\cline{2-3}
+\end{tabular*}
+\begin{tabular*}{\textwidth}
+{@{}ll@{\extracolsep{\fill}}l@{\extracolsep{0.5em}}
+ll@{\extracolsep{\fill}}l@{}}
+{\sc Laurea:}& {\normalsize \degreename}&&
+{\sc Corso:} & {\normalsize\em \coursename}&\\
+\cline{2-3} \cline{5-6}
+{\sc Lettore:}& {\normalsize \refereename}&&
+{\sc Email:} & {\normalsize\tt \refereeemail}&\\
+\cline{2-3} \cline{5-6}
+{\sc Docente:} & {\normalsize \professorname}&&
+{\sc Email:} & {\normalsize\tt \professoremail}&\\
+\cline{2-3} \cline{5-6}
+\end{tabular*}
+\bigskip
+}
+]{
+
+
+
+\bigskip\ \bigskip\ \bigskip
+
+\dimen69=\textwidth
+\advance \dimen69 by -\columnsep
+\divide \dimen69 by 2
+\noindent
+\begin{tabular*}{\dimen69}{@{}|ll@{\extracolsep{\fill}}l|@{}}
+\hline
+& &\\
+Modulo consegnato il: & \preparedate &\\
+& &\\
+\hline
+& &\\
+Modulo preparato il: & \issuedate &\\
+& &\\
+\hline
+\end{tabular*}
+}
+
+\newpage
+\twocolumn%[
+%]
+{
+\subheading{Valutazione globale}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\recommendation}{1} & Ottimo\\
+2 & \cbox{\recommendation}{2} & Distinto\\
+3 & \cbox{\recommendation}{3} & Buono\\
+4 & \cbox{\recommendation}{4} & Discreto\\
+5 & \cbox{\recommendation}{5} & Sufficiente
+\end{tabular}
+
+\subheading{Competenza del lettore}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\competence}{1} & Molto esperto\\
+2 & \cbox{\competence}{2} & Esperto\\
+3 & \cbox{\competence}{3} & Interessato\\
+4 & \cbox{\competence}{4} & Competente
+\end{tabular}
+
+\subheading{Livello di confidenza}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\confidence}{1} & Molto confidente\\
+2 & \cbox{\confidence}{2} & Confidente\\
+3 & \cbox{\confidence}{3} & Ragionevolmente confidente
+\end{tabular}
+
+\subheading{Sforzo richiesto}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\effort}{1} & Grande\\
+2 & \cbox{\effort}{2} & Ragionevole\\
+3 & \cbox{\effort}{3} & Poco\\
+4 & \cbox{\effort}{4} & Quasi nullo
+\end{tabular}
+
+\subheading{Comprensione}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\comprehension}{1} & Capito perfettamente\\
+2 & \cbox{\comprehension}{2} & Capito maggioranza\\
+3 & \cbox{\comprehension}{3} & Capito le idee\\
+4 & \cbox{\comprehension}{4} & Abbastanza confuso\\
+5 & \cbox{\comprehension}{5} & Molto confuso
+\end{tabular}
+
+\subheading{Dettagli verificati}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\details}{1} & Tutti\\
+2 & \cbox{\details}{2} & Maggior parte\\
+3 & \cbox{\details}{3} & Abbastanza\\
+4 & \cbox{\details}{4} & Pochi
+\end{tabular}
+
+\subheading{Correttezza dei risultati}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\correctness}{1} & Corretti\\
+2 & \cbox{\correctness}{2} & Quasi sicuramente corretti\\
+3 & \cbox{\correctness}{3} & Probabilmente corretti\\
+4 & \cbox{\correctness}{4} & Probabilmente incorretti\\
+5 & \cbox{\correctness}{5} & Dimostrazioni sbagliate\\
+6 & \cbox{\correctness}{6} & Risultati sbagliati\\
+7 & \cbox{\correctness}{7} & Non so dirlo
+\end{tabular}
+
+\subheading{Dimostrazioni}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\proofs}{1} & Belle\\
+2 & \cbox{\proofs}{2} & Piacevoli\\
+3 & \cbox{\proofs}{3} & Allo scopo\\
+4 & \cbox{\proofs}{4} & Brutte
+\end{tabular}
+
+\subheading{Accessibilit\`a}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\accessibility}{1} & Esperto\\
+2 & \cbox{\accessibility}{2} & Specialista\\
+3 & \cbox{\accessibility}{3} & Informatico teorico\\
+4 & \cbox{\accessibility}{4} & Informatico
+\end{tabular}
+
+\subheading{Presentazione}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\presentation}{1} & Quasi senza errori\\
+2 & \cbox{\presentation}{2} & Buona\\
+3 & \cbox{\presentation}{3} & Adeguata\\
+4 & \cbox{\presentation}{4} & Superficiale\\
+5 & \cbox{\presentation}{5} & Incomprensibile
+\end{tabular}
+
+\subheading{Lunghezza}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\density}{1} & Troppo lunga\\
+2 & \cbox{\density}{2} & Adeguata\\
+3 & \cbox{\density}{3} & Sintetica\\
+4 & \cbox{\density}{4} & Troppo sintetica
+\end{tabular}
+
+\subheading{Dettagli mancanti}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\missing}{1} & Probabilmente sbagliati\\
+2 & \cbox{\missing}{2} & Spesso incomprensibili\\
+3 & \cbox{\missing}{3} & Richiedono grande sforzo\\
+4 & \cbox{\missing}{4} & Richiedono sforzo\\
+5 & \cbox{\missing}{5} & Richiedono piccolo sforzo\\
+6 & \cbox{\missing}{6} & Non richiedono alcuno sforzo\\
+7 & \cbox{\missing}{7} & Troppi dettagli
+\end{tabular}
+
+\subheading{Italiano}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\italian}{1} & Eccellente\\
+2 & \cbox{\italian}{2} & Buono\\
+3 & \cbox{\italian}{3} & Adeguato\\
+4 & \cbox{\italian}{4} & Sotto lo standard\\
+5 & \cbox{\italian}{5} & Non adeguato\\
+6 & \cbox{\italian}{6} & Pessimo
+\end{tabular}
+
+\subheading{Presentazione in aula}
+
+\noindent
+\begin{tabular}{@{}r@{\hspace{0.5em}}ll@{}}
+1 & \cbox{\originality}{1} & Ottima\\
+2 & \cbox{\originality}{2} & Buona\\
+3 & \cbox{\originality}{3} & Adeguata\\
+4 & \cbox{\originality}{4} & Non adeguata
+\end{tabular}
+
+}
+}
+
+\newenvironment{formalreport}{
+\onecolumn
+{\LARGE
+\begin{center}
+Commenti su\\
+``\notetitle''\\
+di {\em \authornames}
+\end{center}
+}
+\bigskip
+}{}
